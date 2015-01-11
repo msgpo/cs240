@@ -1,0 +1,19 @@
+import java.io.*;
+import java.util.*;
+
+
+public class imageeditor {
+
+	public static void main(String[] args) {
+		File infile = File(args[1]);
+		File outfile = File(args[2]);
+		String op = args[3];
+		if(args.length == 4){
+			int blur = Integer.parseInt(args[3]);
+		}
+		Scanner source = Scanner(infile);
+		
+
+	}
+
+}

@@ -1,0 +1,49 @@
+
+
+public class Pixel {
+	private int red;
+	private int blue;
+	private	int green;
+	
+	public Pixel(int r, int g, int b){
+		red = r;
+		blue = b;
+		green = g;
+	}
+	
+	public int getR(){
+		return red;
+	}
+	
+	public int getB(){
+		return blue;
+	}
+	
+	public int getG(){
+		return green;
+	}
+	
+	public void setR(int n){
+		red = n;
+	}
+	
+	public void setB(int n){
+		blue = n;
+	}
+	
+	public void setG(int n){
+		green = n;
+	}
+	
+	public String toString(){
+		return (red + " " + green + " " + blue);
+	}
+	
+	public void inverse(){
+		red = Math.abs(red-255);
+		green = Math.abs(green-255);
+		blue = Math.abs(blue-255);
+	}
+	
+	
+}

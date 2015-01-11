@@ -1,0 +1,38 @@
+
+public class Pixel {
+	private int red;
+	private int blue;
+	private	int green;
+	
+	public Pixel(int r, int b, int g){
+		red = r;
+		blue = b;
+		green = g;
+	}
+	
+	public int getR(){
+		return red;
+	}
+	
+	public int getB(){
+		return blue;
+	}
+	
+	public int getG(){
+		return green;
+	}
+	
+	public void setR(int n){
+		red = n;
+	}
+	
+	public void setB(int n){
+		blue = n;
+	}
+	
+	public void setG(int n){
+		green = n;
+	}
+	
+	
+}

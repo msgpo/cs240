@@ -1,0 +1,10 @@
+
+public class Image {
+	
+	public Image(){
+		// do nothing - image is blank
+	}
+	
+	public Pixel[][] pixels;
+	
+}
