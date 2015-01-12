@@ -36,7 +36,8 @@ public class Pixel {
 	}
 	
 	public String toString(){
-		return (red + " " + green + " " + blue);
+	  //  System.out.print("PRINTING PIXEL" + this.toString());
+		return (red + " " + green + " " + blue + "\n");
 	}
 	
 	public void kill() {
@@ -52,27 +53,37 @@ public class Pixel {
 	
 	public void gray(){
 		int result = (red + green + blue) / 3;
+	//	System.out.printf("Old vals: %d %d %d \n", red, green, blue);
+	//	System.out.printf("New val: %d \n", result);
 		red = result;
 		green = result;
 		blue = result;
 	}
 	
 	public void emboss(Pixel neighbor){
-		int max = red - neighbor.getR();
-		if (-(green - neighbor.getG()) == max){
-			// do nothing
+		int rDiff = red - neighbor.getR();
+		int gDiff = green - neighbor.getG();
+		int bDiff = blue - neighbor.getB();
+		int max;
+		if (Math.abs(rDiff) >= Math.abs(gDiff)){
+			max = rDiff;
 		}
-		else if (Math.abs(green - neighbor.getG()) > Math.abs(max)){
-			max = green - neighbor.getG();
+		else {
+			max = gDiff;
 		}
-		if (-(blue - neighbor.getB()) == max){
-			// do nothing
-		}
-		else if (Math.abs(blue - neighbor.getB()) > Math.abs(max)){
-			max = blue - neighbor.getB();
+		if (Math.abs(bDiff) >= Math.abs(max)){
+			max = bDiff;
 		}
 		
-		max += 128;
+//		int max = (red - neighbor.getR());
+//		if (Math.abs(green - neighbor.getG()) > Math.abs(max)){
+//			max = (green - neighbor.getG());
+//		}
+//		if (Math.abs(blue - neighbor.getB()) > Math.abs(max)){
+//			max = (blue - neighbor.getB());
+//		}
+		
+		max = max + 128;
 		if(max > 255){
 			max = 255;
 		}

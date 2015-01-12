@@ -24,19 +24,19 @@ public class ImageEditor {
 
 			Image img = new Image(source);
 
-			if(op == "invert"){
+			if(op.equals("invert")){
 				img.invert();
 			}
 
-			if(op == "grayscale"){
+			if(op.equals("grayscale")){
 				img.grayscale();
 			}
 
-			if(op == "emboss"){
+			if(op.equals("emboss")){
 				img.emboss();
 			}
 
-			if(op == "motionblur"){
+			if(op.equals("motionblur")){
 				img.blur(blur);
 			}
 			
@@ -44,6 +44,9 @@ public class ImageEditor {
 		}
 		catch(FileNotFoundException e){
 			System.out.print("No such input file\n");
+		}
+		catch(NumberFormatException e){
+			System.out.println("Bad input file");
 		}
 		
 		
