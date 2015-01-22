@@ -1,8 +1,8 @@
 package spell;
 
-public class ITrie implements ITrie {
+public class dictionary implements ITrie {
 	
-	public ITrie() {
+	public dictionary() {
 		words = 0;
 		nodes = 0;
 	}
@@ -23,7 +23,7 @@ public class ITrie implements ITrie {
 		// return that node (presumably the "null"
 		// would be automagic) 
 		// false results in an exception farther out
-		return null;
+		return new INode();
 	}
 
 	public int getWordCount(){
@@ -68,7 +68,7 @@ public class ITrie implements ITrie {
 			return false;
 		}
 		
-		ITrie d = (ITrie) o;
+		dictionary d = (dictionary) o;
 		
 		if (d.getNodeCount() != nodes || d.getWordCount() != words){
 			return false;
@@ -78,14 +78,14 @@ public class ITrie implements ITrie {
 		}
 	}
 
-	public class INode {
+	public class INode implements ITrie.INode{
 		
 		public void INode(){
 			count = 0;
 		}
 		
 		public int count;
-		public INode nodes = new INode[26];
+		public INode[] nodes = new INode[26];
 		
 		public int getValue(){
 			return count;

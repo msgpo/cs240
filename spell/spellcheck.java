@@ -3,55 +3,77 @@ package spell;
 import java.io.*;
 import java.util.*;
 
-public class ISpellCorrector implements ISpellCorrector{
+public class spellcheck implements ISpellCorrector{
 	
-	public ISpellCorrector( ){
+	public spellcheck(){
 		
 	}
 	
-	private ITrie dict;
+	private dictionary dict;
 	
 	public static class NoSimilarWordFoundException extends Exception {
+		public void NoSimilarWordFoundException(){
+		}
 	}
 	
 	/**
-	 * Tells this <code>ISpellCorrector</code> to use the given file as its ITrie
+	 * Tells this <code>ISpellCorrector</code> to use the given file as its dictionary
 	 * for generating suggestions. 
-	 * @param ITrieFileName File containing the words to be used
+	 * @param dictionaryFileName File containing the words to be used
 	 * @throws IOException If the file cannot be read
 	 */
-	public void useITrie(String ITrieFileName) 
+	public void useDictionary(String dictionaryFileName) 
 			throws IOException {
-		File in = new File(ITrieFileName);
+		File in = new File(dictionaryFileName);
 		Scanner src = new Scanner(in);
-		dict = new ITrie();
+		dict = new dictionary();
 		while(src.hasNext()){
 			String s = src.next();
 			s = s.toLowerCase();
 			dict.add(s);
 		}
 	}
-		
+	
+	public void dummyMethod(){
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+		dummyMethod();
+	}
+
 	/**
-	 * Suggest a word from the ITrie that most closely matches
+	 * Suggest a word from the dictionary that most closely matches
 	 * <code>inputWord</code>
 	 * @param inputWord
 	 * @return The suggestion
-	 * @throws NoSimilarWordFoundException If no similar word is in the ITrie
+	 * @throws NoSimilarWordFoundException If no similar word is in the dictionary
 	 */
-	public String suggestSimilarWord(String inputWord) 
-			throws NoSimilarWordFoundException {
+	public String suggestSimilarWord(String inputWord) throws NoSimilarWordFoundException {
 		// generate Set of dist-1 words as described
 		// search for each, return the highest count
 		HashSet<String> morphed = morph(inputWord);
-		ITrie.INode result; 
-		String found;
+		dictionary.INode result; 
+		TreeSet<String> found;
 		for(String word : morphed){
-			ITrie.INode intermediate = dict.find(word);
-			if(intermediate.getValue() > result.getValue() ||
+			dictionary.INode intermediate = dict.find(word);
+			if(intermediate.getValue() >= result.getValue() ||
 					result == null){
 				result = intermediate;
-				found = word;
+				found.add(word);
 			}
 		}
 		
@@ -61,30 +83,25 @@ public class ISpellCorrector implements ISpellCorrector{
 				morphedAgain.addAll(morph(word));
 			}
 			for(String word : morphedAgain){
-				ITrie.INode intermediate = dict.find(word);
-				if(intermediate.getValue() > result.getValue() ||
+				dictionary.INode intermediate = dict.find(word);
+				if(intermediate.getValue() >= result.getValue() ||
 						result == null){
 					result = intermediate;
-					found = word;
+					found.add(word);
 				}
 			}
 		}
-		
-		if (result == null || result.getValue() == 0) {
-			throw NoSimilarWordFoundException;
+		if(found.size() > 0){
+			return found.first();
 		}
-		
 		else {
-			return found;
+			throw new NoSimilarWordFoundException();
 		}
-	
-		// if each is 0, repeat with dist-2
-		// if still 0, throw exception
-					
+
 	}
 	
 	private HashSet<String> morph(String root){
-		HashSet<String> morphs = new HashSet();
+		HashSet<String> morphs = new HashSet<String>();
 		// add deletion words:
 		for (int i = 0; i < root.length(); i++){
 			StringBuilder s;
@@ -123,12 +140,6 @@ public class ISpellCorrector implements ISpellCorrector{
 				morphs.add(s.append(root).append(put).toString());
 				//making sure to add at end too!
 			}
-		}
-	}
-	
-	public class NoSimilarWordFoundException extends Exception{
-		
-		public void NoSimilarWordFoundException(){
 		}
 	}
 }
