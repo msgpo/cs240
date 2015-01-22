@@ -1,8 +1,8 @@
 package spell;
 
-public dictionary implements ITrie {
+public class ITrie implements ITrie {
 	
-	public dictionary() {
+	public ITrie() {
 		words = 0;
 		nodes = 0;
 	}
@@ -23,6 +23,7 @@ public dictionary implements ITrie {
 		// return that node (presumably the "null"
 		// would be automagic) 
 		// false results in an exception farther out
+		return null;
 	}
 
 	public int getWordCount(){
@@ -43,6 +44,7 @@ public dictionary implements ITrie {
 		// gonna have to somehow start with a in the root node
 		// and figure out the a of each child, then the b of the
 		// leaf, etc.  probably recursive.
+		return null;
 	}
 	
 	@Override
@@ -66,7 +68,7 @@ public dictionary implements ITrie {
 			return false;
 		}
 		
-		dictionary d = (dictionary) o;
+		ITrie d = (ITrie) o;
 		
 		if (d.getNodeCount() != nodes || d.getWordCount() != words){
 			return false;
@@ -76,16 +78,18 @@ public dictionary implements ITrie {
 		}
 	}
 
-	public INode {
+	public class INode {
 		
-		public INode(){
+		public void INode(){
 			count = 0;
 		}
 		
 		public int count;
-		public INode[26] nodes;
+		public INode nodes = new INode[26];
 		
 		public int getValue(){
 			return count;
 		}
 	}
+}
+
