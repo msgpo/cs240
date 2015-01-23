@@ -9,12 +9,39 @@ public class dictionary implements ITrie {
 	
 	private int words;
 	private int nodes;
-	private INode root;
+	public INode root;
 	
 	public void add(String word) {
 		// add word to tree, count++
 		// inc nodes for every new node
 		// words++
+		if(nodes == 0){
+			root = new INode();
+		}
+			
+		add(root, word);
+	}
+
+	private void add(INode n, String word) {
+		int first = ((word.substring(0,1).toCharArray())[0] - 'a');
+		String last = word.substring(1);
+		if (last.length() == 0){
+			// add word!
+			if (n.nodes[first] == null){
+				n.nodes[first] = new INode();
+				nodes++;
+			}
+			n.nodes[first].count++;
+			words++;
+		}
+		else{
+			if (n.nodes[first] == null){
+			// new node, continue
+				n.nodes[first] = new INode();
+				nodes++;
+			}
+			add(n.nodes[first], last);
+		}
 	}
 	
 
@@ -23,8 +50,33 @@ public class dictionary implements ITrie {
 		// return that node (presumably the "null"
 		// would be automagic) 
 		// false results in an exception farther out
-		return new INode();
+		// technically only if no word is EVER found, there's 
+		// a test for null pointer.
+
+		return find(root, word);
+			
 	}
+
+	private INode find(INode n, String word){
+		int first = ((word.substring(0,1).toCharArray())[0] - 'a');
+		String last = word.substring(1);
+		if (n.nodes[first] == null){
+			return null;
+			// dead chain, no find.
+		}
+		if (last.length() == 0){
+			if (n.nodes[first].count == 0){
+				return null;
+			}
+			else {
+				return n.nodes[first];
+			}
+		}
+		else {
+			return find(n.nodes[first], last);
+		}
+	}
+
 
 	public int getWordCount(){
 		return words;
@@ -44,7 +96,31 @@ public class dictionary implements ITrie {
 		// gonna have to somehow start with a in the root node
 		// and figure out the a of each child, then the b of the
 		// leaf, etc.  probably recursive.
-		return null;
+		StringBuilder s = new StringBuilder();
+		for(int i = 0; i < 26; i++){
+			if (root.nodes[i] != null){
+				s.append((char) ('a' + i));
+				if(root.nodes[i].getValue() > 0){
+					s.append('\n');
+				}
+				s.append(toString(root.nodes[i]));
+			}
+		}
+		return s.toString();
+	}
+
+	private String toString(INode n){
+		StringBuilder s = new StringBuilder();
+		for(int i = 0; i < 26; i++){
+			if (n.nodes[i] != null){
+				s.append((char) ('a' + i));
+				if(n.nodes[i].getValue() > 0){
+					s.append('\n');
+				}
+				s.append(toString(n.nodes[i]));
+			}
+		}
+		return s.toString();
 	}
 	
 	@Override
@@ -74,7 +150,7 @@ public class dictionary implements ITrie {
 			return false;
 		}
 		else{
-			// traverse entire trie and compare
+			return root.equals(d.root);
 		}
 	}
 
@@ -89,6 +165,42 @@ public class dictionary implements ITrie {
 		
 		public int getValue(){
 			return count;
+		}
+
+		@Override
+		public boolean equals(Object o){
+
+			if (o == null){
+				return false;
+			}
+			if (o == this){
+				return true;
+			}
+			if (o.getClass() != this.getClass()){
+				return false;
+			}
+
+			INode n = (INode) o;
+	
+			if (count != n.getValue()){
+				return false;
+			}
+			
+			boolean retVal = true;
+
+			for(int i = 0; i < 26; i++){
+				if(nodes[i] == null){
+					if(n.nodes[i] != null){
+						return false;
+					}
+				}
+				retVal = retVal && nodes[i].equals(n.nodes[i]);
+				if(retVal == false){
+					return false;
+				}
+			}
+
+			return retVal;
 		}
 	}
 }

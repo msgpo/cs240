@@ -34,26 +34,7 @@ public class spellcheck implements ISpellCorrector{
 		}
 	}
 	
-	public void dummyMethod(){
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-		dummyMethod();
-	}
+
 
 	/**
 	 * Suggest a word from the dictionary that most closely matches
@@ -62,41 +43,49 @@ public class spellcheck implements ISpellCorrector{
 	 * @return The suggestion
 	 * @throws NoSimilarWordFoundException If no similar word is in the dictionary
 	 */
-	public String suggestSimilarWord(String inputWord) throws NoSimilarWordFoundException {
+	public String suggestSimilarWord(String inputWord) throws
+		spell.ISpellCorrector.NoSimilarWordFoundException {
 		// generate Set of dist-1 words as described
 		// search for each, return the highest count
+
 		HashSet<String> morphed = morph(inputWord);
-		dictionary.INode result; 
-		TreeSet<String> found;
+		int result = 0;	
+		String found = new String();
+		if (dict.find(inputWord) != null){
+			return inputWord;
+		}
 		for(String word : morphed){
 			dictionary.INode intermediate = dict.find(word);
-			if(intermediate.getValue() >= result.getValue() ||
-					result == null){
-				result = intermediate;
-				found.add(word);
+			if(intermediate != null &&
+					intermediate.getValue() >= result &&
+					(found.length() == 0 || 
+					word.compareTo(found) < 0)){
+				result = intermediate.getValue();
+				found = word;
 			}
 		}
 		
-		if (result == null || result.getValue() == 0) {
-			HashSet<String> morphedAgain;
+		if (found.length() == 0) {
+			HashSet<String> morphedAgain = new HashSet<String>();
 			for(String word : morphed){
 				morphedAgain.addAll(morph(word));
 			}
 			for(String word : morphedAgain){
 				dictionary.INode intermediate = dict.find(word);
-				if(intermediate.getValue() >= result.getValue() ||
-						result == null){
-					result = intermediate;
-					found.add(word);
+				if(intermediate != null &&
+						intermediate.getValue() >= result &&
+						(found.length() == 0 || 
+						word.compareTo(found) < 0)){
+					result = intermediate.getValue();
+					found = word;
 				}
 			}
 		}
-		if(found.size() > 0){
-			return found.first();
+		if(found.length() > 0){
+			return found;
 		}
-		else {
-			throw new NoSimilarWordFoundException();
-		}
+			
+		throw new spell.ISpellCorrector.NoSimilarWordFoundException();
 
 	}
 	
@@ -104,7 +93,7 @@ public class spellcheck implements ISpellCorrector{
 		HashSet<String> morphs = new HashSet<String>();
 		// add deletion words:
 		for (int i = 0; i < root.length(); i++){
-			StringBuilder s;
+			StringBuilder s = new StringBuilder();
 			morphs.add(s.append(root.substring(0,i))
 				.append(root.substring(i + 1)).toString());
 		}
@@ -112,7 +101,7 @@ public class spellcheck implements ISpellCorrector{
 		for (int i = 1; i < root.length(); i++){
 			// if string is size one, nothing is done.
 			// else swap each i with i-1
-			StringBuilder s;
+			StringBuilder s = new StringBuilder();
 			char before = root.charAt(i - 1);
 			char after = root.charAt(i);
 			morphs.add(s.append(root.substring(0,i - 1))
@@ -122,7 +111,7 @@ public class spellcheck implements ISpellCorrector{
 		// add alteration words:
 		for (int i = 0; i < root.length(); i++){
 			for (int c = 0; c < 25; c++){
-				StringBuilder s;
+				StringBuilder s = new StringBuilder();
 				char put = (char) (c + 'a');
 				morphs.add(s.append(root.substring(0,i))
 					.append(put)
@@ -132,7 +121,7 @@ public class spellcheck implements ISpellCorrector{
 		// add insertion words:
 		for (int i = 0; i < root.length(); i++){
 			for (int c = 0; c < 25; c++){
-				StringBuilder s;
+				StringBuilder s = new StringBuilder();
 				char put = (char) (c + 'a');
 				morphs.add(s.append(root.substring(0,i))
 					.append(put)
@@ -141,5 +130,8 @@ public class spellcheck implements ISpellCorrector{
 				//making sure to add at end too!
 			}
 		}
+
+		return morphs;
 	}
 }
+

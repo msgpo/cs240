@@ -8,7 +8,7 @@ import spell.ISpellCorrector.NoSimilarWordFoundException;
  * A simple main class for running the spelling corrector. This class is not
  * used by the passoff program.
  */
-public class Main {
+public class main {
 	
 	/**
 	 * Give the dictionary file name as the first argument and the word to correct
@@ -22,7 +22,7 @@ public class Main {
 		/**
 		 * Create an instance of your corrector here
 		 */
-		ISpellCorrector corrector = null;
+		spellcheck corrector = new spellcheck();
 		
 		corrector.useDictionary(dictionaryFileName);
 		String suggestion = corrector.suggestSimilarWord(inputWord);
