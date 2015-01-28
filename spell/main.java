@@ -25,9 +25,14 @@ public class main {
 		spellcheck corrector = new spellcheck();
 		
 		corrector.useDictionary(dictionaryFileName);
+		try{
 		String suggestion = corrector.suggestSimilarWord(inputWord);
-		
-		System.out.println("Suggestion is: " + suggestion);
+		System.out.println("Suggestion is: " + suggestion);}
+		catch(NoSimilarWordFoundException e){
+			// do nothing, essentially
+			System.out.println("NOPE TRY AGAIN");
+		}
+	//	System.out.println(corrector.toString());
 	}
 
 }

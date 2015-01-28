@@ -16,6 +16,11 @@ public class spellcheck implements ISpellCorrector{
 		}
 	}
 	
+	//@Override
+	//public String toString(){
+		//return dict.toString();
+	//}
+	
 	/**
 	 * Tells this <code>ISpellCorrector</code> to use the given file as its dictionary
 	 * for generating suggestions. 
@@ -47,13 +52,13 @@ public class spellcheck implements ISpellCorrector{
 		spell.ISpellCorrector.NoSimilarWordFoundException {
 		// generate Set of dist-1 words as described
 		// search for each, return the highest count
-
-		HashSet<String> morphed = morph(inputWord);
-		int result = 0;	
-		String found = new String();
+		inputWord = inputWord.toLowerCase();
 		if (dict.find(inputWord) != null){
 			return inputWord;
 		}
+		HashSet<String> morphed = morph(inputWord);
+		int result = 0;	
+		String found = new String();
 		for(String word : morphed){
 			dictionary.INode intermediate = dict.find(word);
 			if(intermediate != null &&
@@ -66,6 +71,11 @@ public class spellcheck implements ISpellCorrector{
 		}
 		
 		if (found.length() == 0) {
+//System.out.println("dist-1 words:");
+//for(String z : morphed){
+//System.out.println(z);
+//}
+//System.out.println("Doing dist-2 words.");
 			HashSet<String> morphedAgain = new HashSet<String>();
 			for(String word : morphed){
 				morphedAgain.addAll(morph(word));
@@ -99,6 +109,7 @@ public class spellcheck implements ISpellCorrector{
 		}
 		// add transposition words:
 		for (int i = 1; i < root.length(); i++){
+//System.out.println("Transposing!");
 			// if string is size one, nothing is done.
 			// else swap each i with i-1
 			StringBuilder s = new StringBuilder();
@@ -110,7 +121,7 @@ public class spellcheck implements ISpellCorrector{
 		}
 		// add alteration words:
 		for (int i = 0; i < root.length(); i++){
-			for (int c = 0; c < 25; c++){
+			for (int c = 0; c < 26; c++){
 				StringBuilder s = new StringBuilder();
 				char put = (char) (c + 'a');
 				morphs.add(s.append(root.substring(0,i))
@@ -119,15 +130,15 @@ public class spellcheck implements ISpellCorrector{
 			}
 		}
 		// add insertion words:
-		for (int i = 0; i < root.length(); i++){
-			for (int c = 0; c < 25; c++){
+		for (int i = 0; i <= root.length(); i++){
+			for (int c = 0; c < 26; c++){
 				StringBuilder s = new StringBuilder();
 				char put = (char) (c + 'a');
 				morphs.add(s.append(root.substring(0,i))
 					.append(put)
 					.append(root.substring(i)).toString());
-				morphs.add(s.append(root).append(put).toString());
-				//making sure to add at end too!
+//				morphs.add(s.append(root).append(put).toString());
+//				//making sure to add at end too!
 			}
 		}
 

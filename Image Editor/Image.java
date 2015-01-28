@@ -88,34 +88,65 @@ public class Image {
 	}
 	
 	public void grayscale(){
-	System.out.printf("Killing pixels\n");
-	System.out.println("Killing pixels!");
+//	System.out.printf("Killing pixels\n");
+//	System.out.println("Killing pixels!");
 		for (int y = 0; y < height; y++){
 			for (int x = 0; x < width; x++){
 				pixels[x][y].gray();
-				System.out.printf("Killing pixel at %d, %d\n",x,y);
+//				System.out.printf("Killing pixel at %d, %d\n",x,y);
 			}
 		}
 	}
 	
 	public void emboss(){
 	//	Pixel ded = new Pixel(128,128,128);
+		for (int y = height - 1; y > 0 ; y--){
+			for (int x = width - 1; x > 0; x--){
+				pixels[x][y].emboss(pixels[x-1][y-1]);
+			}
+		}
 		for (int y = 0; y < height; y++){
 			pixels[0][y].kill();
 		}
 		for (int x = 0; x < width; x++){
 			pixels[x][0].kill();
 		}
-		for (int y = 1; y < height; y++){
-			for (int x = 1; x < width; x++){
-				pixels[x][y].emboss(pixels[x-1][y-1]);
-			}
-		}
 	}
 	
 	public void blur(int r){
 		// make average across the streak for each pixel
 		// make new pixel, set original equal to new
+		for (int y = 0; y < height; y++){
+	//	System.out.println("Blurring!");
+			for (int x = 0; x < width; x++){
+				int end;
+				int nRed = 0, nBlue = 0, nGreen = 0;
+				if ((x + r - 1) >= width){ //2+7 > 3
+					end = width;		// end = 3
+					for (int a = x; a < end; a++){			// here we do pixel 2, the last one,
+						nRed += pixels[a][y].getR();		// and that's that.
+						nBlue += pixels[a][y].getB();		
+						nGreen += pixels[a][y].getG();
+					}
+					nRed = nRed / (end - x);			// Then we divide by (3 - 2) = 1
+					nBlue = nBlue / (end - x);			// which is correct.
+					nGreen = nGreen / (end - x);
+					pixels[x][y] = new Pixel(nRed, nGreen, nBlue);
+				}
+				else {							// 2 + 2 < 5000000
+					end = x + r - 1;				// here we do pixels 2 and 3: end = 2 + 2 - 1 = 3
+					for (int a = x; a <= end; a++){			// first time: a = 2, second: a = 3
+						nRed += pixels[a][y].getR();
+						nBlue += pixels[a][y].getB();
+						nGreen += pixels[a][y].getG();
+					}
+					nRed = nRed / r;
+					nBlue = nBlue / r;
+					nGreen = nGreen / r;
+					pixels[x][y] = new Pixel(nRed, nGreen, nBlue);
+				}
+			}
+		}
 	}
 }
 

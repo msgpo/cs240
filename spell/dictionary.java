@@ -4,7 +4,7 @@ public class dictionary implements ITrie {
 	
 	public dictionary() {
 		words = 0;
-		nodes = 0;
+		nodes = 1;
 	}
 	
 	private int words;
@@ -15,7 +15,7 @@ public class dictionary implements ITrie {
 		// add word to tree, count++
 		// inc nodes for every new node
 		// words++
-		if(nodes == 0){
+		if(nodes == 1){
 			root = new INode();
 		}
 			
@@ -58,8 +58,21 @@ public class dictionary implements ITrie {
 	}
 
 	private INode find(INode n, String word){
-		int first = ((word.substring(0,1).toCharArray())[0] - 'a');
-		String last = word.substring(1);
+		int first;
+		String last;
+		if (word.length() > 1){
+			first = ((word.substring(0,1).toCharArray())[0] - 'a');
+			last = word.substring(1);
+		}
+		else if (word.length() == 1) {
+			first = ((word.toCharArray())[0] - 'a');
+			last = ""; 
+		}
+		else {
+			return null;
+			// "" is not in the dictionary.  like, ever.
+		}
+		
 		if (n.nodes[first] == null){
 			return null;
 			// dead chain, no find.
@@ -96,32 +109,38 @@ public class dictionary implements ITrie {
 		// gonna have to somehow start with a in the root node
 		// and figure out the a of each child, then the b of the
 		// leaf, etc.  probably recursive.
-		StringBuilder s = new StringBuilder();
-		for(int i = 0; i < 26; i++){
-			if (root.nodes[i] != null){
-				s.append((char) ('a' + i));
-				if(root.nodes[i].getValue() > 0){
-					s.append('\n');
-				}
-				s.append(toString(root.nodes[i]));
-			}
-		}
-		return s.toString();
+		StringBuilder result = new StringBuilder();
+		toString(root, result, new StringBuilder(""));
+System.out.println("Some kind of toString.");
+		return result.toString();
+		
 	}
 
-	private String toString(INode n){
-		StringBuilder s = new StringBuilder();
-		for(int i = 0; i < 26; i++){
-			if (n.nodes[i] != null){
-				s.append((char) ('a' + i));
-				if(n.nodes[i].getValue() > 0){
-					s.append('\n');
+	private void toString(INode n, StringBuilder out, 
+			StringBuilder stem){
+		StringBuilder s = new StringBuilder(stem.toString());
+//System.out.println("COME ON PRINT ANYTHING");
+		for (int i = 0; i < 26; i++) {
+//System.out.println("New character loop.");
+			if (n.nodes[i] != null) {
+				if (n.nodes[i].getValue() > 0) {
+//System.out.println("Adding something to the output.");
+					out.append(s.append((char) ('a' + i)));
+					s.setLength(s.length() - 1);
+					out.append('\n');
+					toString(n.nodes[i], out, 
+						stem.append((char) ('a' + i)));
+					stem.setLength(stem.length() - 1);
 				}
-				s.append(toString(n.nodes[i]));
+				else { 
+//System.out.println("Or continuing to the next node, no add.");
+					toString(n.nodes[i], out, 
+						stem.append((char) ('a' + i)));
+					stem.setLength(stem.length() - 1);
+				}
 			}
 		}
-		return s.toString();
-	}
+	}	
 	
 	@Override
 	public int hashCode(){
@@ -192,9 +211,14 @@ public class dictionary implements ITrie {
 				if(nodes[i] == null){
 					if(n.nodes[i] != null){
 						return false;
-					}
+					}					
 				}
-				retVal = retVal && nodes[i].equals(n.nodes[i]);
+				if(nodes[i] == null && n.nodes[i] == null){
+					retVal = retVal && true;
+				}
+				else {
+					retVal = retVal && nodes[i].equals(n.nodes[i]);
+				}
 				if(retVal == false){
 					return false;
 				}

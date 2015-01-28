@@ -19,6 +19,10 @@ public class ImageEditor {
 			int blur = 0;
 			if(args.length == 4){
 				blur = Integer.parseInt(args[3]);
+				if (blur < 1){
+					blur = 1;
+				}
+				
 			}
 			Scanner source = new Scanner(infile);
 

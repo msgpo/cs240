@@ -62,16 +62,14 @@ public class Pixel {
 	
 	public void emboss(Pixel neighbor){
 		int rDiff = red - neighbor.getR();
+//		System.out.printf("rDiff is %d after red - n.red, %d - %d", rDiff, red, neighbor.getR());
 		int gDiff = green - neighbor.getG();
 		int bDiff = blue - neighbor.getB();
-		int max;
-		if (Math.abs(rDiff) >= Math.abs(gDiff)){
-			max = rDiff;
-		}
-		else {
+		int max = rDiff;
+		if (Math.abs(rDiff) < Math.abs(gDiff)){
 			max = gDiff;
 		}
-		if (Math.abs(bDiff) >= Math.abs(max)){
+		if (Math.abs(bDiff) > Math.abs(max)){
 			max = bDiff;
 		}
 		
