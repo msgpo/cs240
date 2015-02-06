@@ -23,7 +23,8 @@ public class evil implements IEvilHangmanGame {
 	public void startGame(File dictionary, int wordLength){
 		//reset / init all the vars to be ready for a new game
 		
-		guesses = new HashSet<Character>();
+		guesses = new TreeSet<Character>();
+		src = new HashSet<String>();
 		try{
 			Scanner read = new Scanner(dictionary);
 			while(read.hasNext()){
@@ -40,6 +41,8 @@ public class evil implements IEvilHangmanGame {
 	
 	public HashSet<String> makeGuess(char guess)
 			throws IEvilHangmanGame.GuessAlreadyMadeException {
+		HashSet<String> ret = new HashSet<String>();
+			// have to do this to avoid NPE
 		if (guesses.contains(guess)){
 			throw new IEvilHangmanGame.GuessAlreadyMadeException();
 		}
@@ -76,12 +79,21 @@ public class evil implements IEvilHangmanGame {
 					// do nothing.  we are throwing this data away.
 				}
 			}
-			parts = parts.get(line);
+			ret = parts.get(line);
+			if(ret.size() > 0){
+				// there was a misunderstanding here...
+				// basically i never selected a group with ----
+				// for some dumb reason.  but if i did select that
+				// group, it would not get "saved," and blah blah blah
+				src = ret;
+			//	System.out.println(src.toString());
+			//	System.out.println(ret.toString());
+			}
 		}
-		return parts;
+		return ret; 
 	}
 			
-	private String makePattern(String word, char pivot){
+	public String makePattern(String word, char pivot){
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < word.length(); i++){
 			if(word.charAt(i) == pivot){
@@ -91,6 +103,9 @@ public class evil implements IEvilHangmanGame {
 				sb.append('-');
 			}
 		}
+	//	System.out.println("Made pattern: " + sb.toString());
+	//	System.out.println("from word: " + word);
+	//	System.out.println("Pivot was: " + pivot);
 		return sb.toString();
 	}
 	
@@ -100,13 +115,14 @@ public class evil implements IEvilHangmanGame {
 		int a = 0;
 		int b = 0;
 		for(int i = 0; i < first.length(); i++){
-			if(first.charAt(i) != '-'){
+			// count -'s and note final non-dash
+			if(first.charAt(i) == '-'){
 				one++;
 			}
 			else {
 				a = i;
 			}
-			if(second.charAt(i) != '-'){
+			if(second.charAt(i) == '-'){
 				two++;
 			}
 			else {
@@ -114,9 +130,14 @@ public class evil implements IEvilHangmanGame {
 			}
 		}
 		if(one > two){
+			// first has more dashes
+		//	System.out.println("compare 1 wins: " + first);
 			return first;
 		}
-		if(two < one){
+		if(two > one){
+			// second has more dashes
+			// effing forgot to swap the less than for a greater than
+		//	System.out.println("compare 2 wins: " + second);
 			return second;
 		}
 		// the above takes care of the case where one string has
