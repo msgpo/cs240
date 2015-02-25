@@ -7,23 +7,20 @@ import java.io.*;
  */
 public class batch {
 	
-	private String sImg;	private int ID;
-	private int y;
-	private int h;
-	private int recs;
-	private int fs;
+	private String sImg;
+	private int ID;
 	private int uid;
-	private List<String> records;
+	private boolean owned = false;
+	private LinkedList<record> records;
+	
 	/**
 	 * Constructs a new batch.
 	*	@param image image URL
-	*	@param y_coord y-coordinate of first field
-	*	@param height height of fields
-	*	@param records number of records
-	*	@param fieldQuant number of fields
+	* 	@param id the batch's unique ID
 	*/
-	public batch(String image, int y_coord, int height, int records, int fieldQuant){
-		// stuff
+	public batch(String image, int id){
+		sImg = image;
+		ID = id;
 	}
 	
 	/**
@@ -31,7 +28,16 @@ public class batch {
 	*	@param newID new user id
 	*/
 	public void updateUser(int newID){
-		//...
+		uid = newID;
+		owned = true;
+	}
+	
+	/**
+	 * reveal if batch is owned
+	 * @return true if owned, false if free
+	 */
+	public boolean isOwned(){
+		return owned;
 	}
 
 	/**
@@ -46,8 +52,16 @@ public class batch {
 	*	add records
 	*	@param r record to add
 	*/
-	public void addRecord(String r){
+	public void addRecord(record r){
 		// stasdfa
+	}
+	
+	/**
+	 * get list of records that have been indexed
+	 * @return a LinkedList of record objects
+	 */
+	public LinkedList<record> getRecords(){
+		return records;
 	}
 
 	/**
@@ -57,45 +71,4 @@ public class batch {
 	public String getImage(){
 		return sImg;
 	}
-
-	/** 
-	 * get the y-coordinate of the first record
-	*	@return the y-coordinate
-	*/
-	public int ycoord(){
-		return y;
-	}
-
-	/** 
-	 * reveal how many records have been indexed
-	*	@return the number of records
-	*/
-	public int records(){
-		return recs;
-	}
-
-	/** 
-	 * reveal how many fields this type of batch has
-	*	@return the number of fields
-	*/
-	public int fields(){
-		return fs;
-	}
-
-	/** 
-	 * reveal the height of each field
-	*	@return the height
-	*/
-	public int height(){
-		return h;
-	}
-
-	/**
-	*	give the "next" field back
-	*	@return a field from the batch
-	*/
-	public field nextField(){
-		return new field("", 0, 0, 0, 0, "", "");
-	}
-	
 }

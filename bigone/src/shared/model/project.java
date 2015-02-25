@@ -14,15 +14,22 @@ public class project {
 	private String sImg;
 	private String name;
 	private int ID;
-	private List<field> fields;
-	private List<batch> batches;
+	private LinkedList<field> fields;
+	private LinkedList<batch> batches;
+	private int y;
+	private int recs;
+	private int h;
+	
 	/**
 	 * Construct a new project
 	*	@param image sample image URL
 	*	@param title project name
 	*	@param pID project ID
+	* 	@param y_coord y-coordinate of first field
+	* 	@param height height of each field
 	*/
-	public project(String image, String title, int pID){
+	public project(String image, String title, int pID,
+			int y_coord, int height){
 		// stuff
 	}
 
@@ -71,17 +78,31 @@ public class project {
 	*	give the "next" batch back
 	*	@return a batch from the project
 	*/
-	public batch nextBatch(){
-		return new batch("", 0, 0, 0, 0);
+	public LinkedList<batch> getBatches(){
+		return batches;
 	}
 
 	/**
 	*	give the "next" field back
 	*	@return a field from the project
 	*/
-	public field nextField(){
-		return new field("", 0, 0, 0, 0, "", "");
-		
+	public LinkedList<field> getFields(){
+		return fields;
 	}
 	
+	/**
+	 * update the number of records indexed in this project
+	 * @param add the number of new records to add
+	 */
+	public void updateRecords(int add){
+		recs = recs + add;
+	}
+	
+	/**
+	 * reveal how many records in this project have been indexed
+	 * @return the number of records already indexed
+	 */
+	public int getRecordQuantity(){
+		return recs;
+	}	
 }

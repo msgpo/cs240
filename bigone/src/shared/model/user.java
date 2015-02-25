@@ -17,6 +17,8 @@ public class user {
 	private String pw;
 	private int rec;
 	private int id;
+	private int batchID;
+	private boolean hasBatch = false;
 
 	/**
 	 * Construct a new user
@@ -39,6 +41,39 @@ public class user {
 	public void updateRecords(int add){
 		// asdfasdf
 	}
+	
+	/**
+	 * reveal how many records this user has indexed
+	 * @return the number of records already indexed
+	 */
+	public int getRecords(){
+		return rec;
+	}
+	
+	/**
+	 * assign a batch to this user
+	 * @param assign ID of batch to assign
+	 */
+	public void assignBatch(int assign){
+		batchID = assign;
+		hasBatch = true;
+	}
+	
+	/**
+	 * reveal whether a batch is assigned
+	 * @return true if batch assigned, false otherwise
+	 */
+	public boolean hasBatch(){
+		return hasBatch;
+	}
+	
+	/**
+	 * reveal which batch has been assigned
+	 * @return int ID of assigned batch
+	 */
+	public int whichBatch(){
+		return batchID;
+	}	
 
 	/**
 	 * get a userToken, representing this user,

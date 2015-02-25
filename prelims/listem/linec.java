@@ -16,6 +16,7 @@ public class linec extends manipulate implements ILineCounter {
 		Map<File, Integer> results = new TreeMap<File, Integer>();
 		for(String entry : directory.list()){
 			File child = new File(directory, entry);
+System.out.println(child.toString());		
 			if(canRead(p, child, entry)){
 				doWork(results, child, p);
 			}
