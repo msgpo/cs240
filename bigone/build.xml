@@ -1,15 +1,19 @@
 <project>
 
 	<target name="clean">
-		<delete dir="build"/>
+		<delete dir="bin"/>
 	</target>
 
 	<target name="compile">
-		<mkdir dir="build/classes"/>
-		<javac srcdir="src" destdir="build/classes"/>
+		<mkdir dir="bin/classes"/>
+		<javac srcdir="src" destdir="bin/classes"/>
 	</target>
 
 	<target name="run">
+	</target>
+
+	<target name="doc">
+		<javadoc sourcepath="src" destdir="docs"/>
 	</target>
 
 </project>

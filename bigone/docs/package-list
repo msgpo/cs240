@@ -1,4 +1,7 @@
 client
 server
+server.database
+server.database.dao
+shared
 shared.communication
 shared.model
