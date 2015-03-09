@@ -18,10 +18,12 @@ public class record {
 	 * Construct a new record
 	*	@param bID the batch this record will belong to
 	* 	@param fID the field this record "completes"
-	* 	@param rID the ID of this record
+	* 	@param rID the ID of this record (zero before put in DB)
 	*/
 	public record(int bID, int fID, int rID){
-		// stuff
+		batchID = bID;
+		fieldID = fID;
+		ID = rID;
 	}
 
 	/**
@@ -46,5 +48,29 @@ public class record {
 	*/
 	public int getID(){
 		return ID;
+	}
+	
+	/**
+	 * set the record's DB-generated ID
+	 * @param i new unique ID
+	 */
+	public void setID(int i){
+		ID = i;
+	}
+	
+	/**
+	 * get reference to the batch we need
+	 * @return batch ID (it's an int, duh)
+	 */
+	public int getBatch(){
+		return batchID;
+	}
+	
+	/**
+	 * get reference to the field we need
+	 * @return field ID (again, an int.  as ever)
+	 */
+	public int getField(){
+		return fieldID;
 	}
 }

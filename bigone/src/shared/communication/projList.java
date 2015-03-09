@@ -8,7 +8,7 @@ import shared.model.project;
  * projLists are sent from the server to the client as a response
  * to a request to list projects which are available for indexing
  */
-public class projList{
+public class projList implements Serializable{
 	
 	private List<project> proj;
 	private boolean failure;
@@ -24,7 +24,7 @@ public class projList{
 	*	@param p project to be added
 	*/
 	public void addProject(project p){
-		// do stuff
+		proj.add(p);
 	}
 	
 	/**
@@ -49,7 +49,16 @@ public class projList{
 	*/
 	@Override
 	public String toString(){
-		// do stuff
-		return "";
+		if(failure){
+			return "FAILED\n";
+		}
+		StringBuilder sb = new StringBuilder();
+		for(project t : proj){
+			sb.append(t.getID());
+			sb.append("\n");
+			sb.append(t.getTitle());
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 }

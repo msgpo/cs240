@@ -9,15 +9,16 @@ import shared.model.field;
  * from the server to the client as a response to a request
  * for fields
  */
-public class fieldList{
+public class fieldList implements Serializable {
 	
-	private List<field> field;
+	private LinkedList<field> fields;
 	private boolean failure;
 
 	/**
 	*	Constructs a new field list
 	*/
 	public fieldList(){
+		failure = false;
 	}
 	
 	/**
@@ -25,7 +26,7 @@ public class fieldList{
 	*	@param f field to be added
 	*/
 	public void addField(field f){
-		// do stuff
+		fields.add(f);
 	}
 	
 	/**
@@ -49,7 +50,19 @@ public class fieldList{
 	*/
 	@Override
 	public String toString(){
-		// do stuff
-		return "";
+		if(failure){
+			return "FAILED\n";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for(field t : fields){
+			sb.append(t.getProject());
+			sb.append("/n");
+			sb.append(t.getID());
+			sb.append("/n");
+			sb.append(t.getTitle());
+			sb.append("/n");
+		}
+		return sb.toString();
 	}
 }

@@ -8,7 +8,7 @@ import java.io.*;
  * asks the server to perform a keyword search in the 
  * records of the database
  */
-public class searchProposal {
+public class searchProposal implements Serializable {
 	
 	private String fields;
 	private String sought;
@@ -19,7 +19,8 @@ public class searchProposal {
 	*	@param lookFor	looking for this
 	*/
 	public searchProposal(String inFields, String lookFor){
-		// do stuff
+		fields = inFields;
+		sought = lookFor;
 	}
 
 	/**

@@ -13,6 +13,7 @@
 	</target>
 
 	<target name="doc">
+		<delete dir="docs"/>
 		<javadoc sourcepath="src" destdir="docs"/>
 	</target>
 

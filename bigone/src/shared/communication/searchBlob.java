@@ -8,7 +8,7 @@ import java.util.*;
  * records which have been indexed
  */
 
-public class searchBlob {
+public class searchBlob implements Serializable {
 	
 	private int batchID;
 	private String image;
@@ -18,13 +18,17 @@ public class searchBlob {
 
 	/**
 	 * Constructs a new searchBlob
-	*	@param batch the ID of the batch
+	*	@param bid the ID of the batch
 	*	@param imageURL URL of batch image
 	*	@param recordNumber the record number
 	*	@param fieldNumber the field number
 	*/
-	public searchBlob(int batch, String imageURL, int recordNumber, int fieldNumber){
-		// do stuff
+	public searchBlob(int bid, String imageURL, int recordNumber, int fieldNumber){
+		batchID = bid;
+		image = imageURL;
+		rNum = recordNumber;
+		fNum = fieldNumber;
+		failure = false;
 	}
 
 	/**
@@ -48,8 +52,14 @@ public class searchBlob {
 	*/
 	@Override
 	public String toString(){
-		//do stuff
-		return "";
+		if(failure){
+			return "FAILED/n";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		return "   BROKEN!  FIGURE OUT HOW FIELDS AND RECORDS WORK  ";
+		// whoops
 	}
 }
 

@@ -12,31 +12,33 @@ import java.io.*;
 * 	from the server.
 */
 
-public class userToken {
+public class userToken implements Serializable{
 
-	private String name;
+	private String fName;
+	private String lName;
 	private String pw;
 	
 	/**
 	 * Construct a userToken
-	*	@param username the user's username
+	*	@param firstname the user's first name
+	* 	@param lastname the user's last name
 	*	@param password the password
 	*/
 
-	public userToken(String username, String password){
-		name = username;
-		pw = username;
+	public userToken(String firstname, String lastname, String password){
+		fName = firstname;
+		lName = lastname;
+		pw = password;
 	}
 	
 	/**
 	 * check if the username and password on the server
 	 * match what the client has submitted
-	*	@param username the proffered username
 	*	@param password the supposed password
 	*	@return true if you've matched, false otherwise
 	*/
-	public boolean auth(String username, String password){
-		return (name == username && pw == password);
+	public boolean auth(String password){
+		return (pw == password);
 	}
 	
 	/**
@@ -46,8 +48,9 @@ public class userToken {
 	 * otherwise, password lookup and check proceeds.
 	 * @return the username
 	 */
-	public String getUser(){
-		return name;
+	public String[] getName(){
+		String[] s = {fName, lName};
+		return s;
 	}
 
 }

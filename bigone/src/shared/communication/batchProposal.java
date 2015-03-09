@@ -8,7 +8,7 @@ import java.util.*;
  * to submit indexed batches to the server
  */
 
-public class batchProposal {
+public class batchProposal implements Serializable {
 	
 	private int batchID;
 	private String submission;
@@ -19,7 +19,8 @@ public class batchProposal {
 	*	@param proposal the proposed records
 	*/
 	public batchProposal(int id, String proposal){
-		// do stuff
+		batchID = id;
+		submission = proposal;
 	}
 	
 	/**

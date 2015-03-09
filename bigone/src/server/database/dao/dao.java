@@ -24,9 +24,4 @@ abstract public class dao {
 	public dao(Database db){
 		this.db = db;
 	}
-
-	abstract Object get() throws DBException;
-	abstract void add(Object o) throws DBException;
-	abstract void update(Object o) throws DBException;
-	abstract void delete(Object o) throws DBException;
 }

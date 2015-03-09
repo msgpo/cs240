@@ -9,13 +9,13 @@ import java.io.*;
 * 	on provided user credentials. 
 */
 
-public class authToken {
+public class authToken implements Serializable {
 
-	private String fName;
-	private String lName;
-	private int recs;
-	private boolean failure;
-	private boolean invalid;
+	private String fName = "";
+	private String lName = "";
+	private int recs = 0;
+	private boolean failure = false;
+	private boolean invalid = false;
 	
 	/**
 	*	Constructs a normal user
@@ -34,7 +34,12 @@ public class authToken {
 	*	@param errorLevel 1 for invalid user, 2 for failure
 	*/
 	public authToken(int errorLevel){
-		// do stuff!
+		if(errorLevel ==1){
+			invalid = true;
+		}
+		else {
+			failure = true;
+		}
 	}
 	
 	/**
@@ -42,7 +47,7 @@ public class authToken {
 	*	@return true if invalid input, false otherwise
 	*/
 	public boolean invalid(){
-		return true;
+		return invalid;
 	}
 	
 	/**
@@ -50,7 +55,7 @@ public class authToken {
 	*	@return true if some failure occurred, false otherwise
 	*/
 	public boolean failure(){
-		return true;
+		return failure;
 	}
 
 	/**
@@ -60,8 +65,13 @@ public class authToken {
 	*/
 	@Override
 	public String toString(){
-		//do stuff
-		return "";
+		if(failure){
+			return "FAILED\n";
+		}
+		if(invalid){
+			return "FALSE\n";
+		}
+		return "TRUE\n" + fName + "\n" + lName + "\n" + recs + "\n";
 	}
 	
 
