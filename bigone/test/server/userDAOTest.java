@@ -16,7 +16,7 @@ public class userDAOTest {
 			("/Users/rt/workspaces/cs240/bigone/stowage.db");
 	
 	@BeforeClass
-	public void setUp() throws DBException{
+	public static void setUp() throws DBException{
 		Database.initialize();
 	}
 	
