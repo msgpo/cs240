@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * A batch of records to be indexed by a user
  */
-public class batch {
+public class batch implements Serializable {
 	
 	private String sImg;
 	private int ID;
@@ -122,4 +122,5 @@ public class batch {
 	public String getImage(){
 		return sImg;
 	}
+	
 }

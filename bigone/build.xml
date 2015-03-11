@@ -1,20 +1,139 @@
-<project>
+<project name="bigone" default="compile" basedir=".">
+	
+	<!-- some variables -->
+	<property name="src" location="src"/>
+	<property name="test" location="test"/>
+	<property name="lib" location="lib"/>
+	<property name="build" location="bin"/>
+	<property name="database" location="."/>
+	<property name="demo" location="demo"/>
+	<property name="docs" location="docs"/>
+	<property name="passoff" location="passoff"/>
+	<property name="db-file" location="${database}/stowage.db"/>
 
-	<target name="clean">
-		<delete dir="bin"/>
+	<!-- default cmdline params, overriden if necessary -->
+	<property name="file" value=""/>
+	<property name="host" value="localhost"/>
+	<property name="port" value="9950"/>
+
+	<!-- classpaths -->
+	<path id="lib-classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>	
+	</path>
+	<path id="all-classpath">
+		<path refid="lib-classpath"/>
+		<pathelement location="${build}"/>
+	</path>
+	<path id="passoff-classpath">
+		<path refid="all-classpath"/>
+		<pathelement location="${passoff}/server-passoff.jar"/>
+	</path>
+
+	<!-- actual targets here -->
+	<target name="init" description="create code destination">
+		<tstamp/>
+		<mkdir dir="${build}"/>
+		<mkdir dir="${passoff}"/>
 	</target>
-
-	<target name="compile">
-		<mkdir dir="bin/classes"/>
-		<javac srcdir="src" destdir="bin/classes"/>
+	<target name="clean" description="clean up compiled code">
+		<delete dir="${build}"/>
+		<delete dir="${passoff}"/>
+	</target>	
+	<target name="compile" depends="init" 
+			description="compile source to dest paths">
+		<javac srcdir="${src}" classpathref="lib-classpath"
+				destdir="${build}" debug="true"
+				includeantruntime="true" />
+		<javac srcdir="${test}" classpathref="lib-classpath" 
+				destdir="${build}" debug="true" 
+				includeantruntime="true" />
 	</target>
-
-	<target name="run">
+	<!-- ant import -Dfile=<INDEXER_DATA_XML_FILE> -->
+	<!-- EXAMPLE: ant import -Dfile=dir1/dir2/indexer_data.xml -->
+	<!-- default argument is "" -->
+	<target name="import" depends="compile" 
+			description="import indexer data, default no file">
+		<java classname="server.importer" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<arg value="${file}"/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
 	</target>
-
+	<!-- ant server {-Dport=<SERVER_PORT_NUMBER>} -->
+	<!-- EXAMPLE: ant server -Dport=39640 -->
+	<!-- If port number is omitted, run on default port. -->
+	<!-- EXAMPLE: ant server -->
+	<target name="server" depends="compile" 
+			description="run server on specified port [9950]">
+		<java classname="server.server" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<arg value="${port}"/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	<target name="server-gui" depends="compile" description="run the server test gui">
+		<java classname="servertester.GuiTester" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	<target name="server-tests" depends="compile" description="run automated server tests">
+		<java classname="server.ServerUnitTests" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+		<!-- ant client {-Dhost=<SERVER_HOST>} {-Dport=<SERVER_PORT_NUMBER>} -->
+	<!-- EXAMPLE: ant client -Dhost=testserver.cs.byu.edu -Dport=39640 -->
+	<!-- If host and/or port number are omitted, default values are used. -->
+	<!-- EXAMPLE: ant client -->
+	<target name="client" depends="compile" 
+			description="run client using server on specified host and port">
+		<java classname="THE NAME OF YOUR CLIENT CLASS GOES HERE" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<arg value="${host}"/>
+			<arg value="${port}"/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	<target name="client-tests" depends="compile" description="run automated client tests">
+		<java classname="client.ClientUnitTests" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	<target name="demo" description="run the demo">
+		<java jar="${demo}/record-indexer-demo.jar" fork="yes" dir="${demo}">
+		</java>
+	</target>
 	<target name="doc">
-		<delete dir="docs"/>
-		<javadoc sourcepath="src" destdir="docs"/>
+		<delete dir="${docs}"/>
+		<javadoc sourcepath="${src}" destdir="${docs}"/>
 	</target>
-
 </project>

@@ -9,10 +9,11 @@ import shared.communication.*;
  * data, and the number of records indexed by that user.
   */
 
-public class user {
+public class user implements Serializable{
 	
 	private String fName;
 	private String lName;
+	private String username;
 	private String un;
 	private String pw;
 	private int rec;
@@ -22,14 +23,16 @@ public class user {
 
 	/**
 	 * Construct a new user
+	 * @param uname user's username
 	*	@param firstName user's first name
 	*	@param lastName user's last name
 	*	@param password	user's password
 	*	@param records	how many records have been indexed
 	*	@param userID	user's ID; not important if not creating from DB
 	*/
-	public user(String firstName, String lastName,
+	public user(String uname, String firstName, String lastName,
 			String password, int records, int userID){
+		username = uname;
 		fName = firstName;
 		lName = lastName;
 		un = firstName + " " + lastName;
@@ -52,6 +55,14 @@ public class user {
 	 */
 	public String getLName(){
 		return lName;
+	}
+	
+	/**
+	 * get username
+	 * @return String username
+	 */
+	public String getUsername(){
+		return username;
 	}
 	
 	/** 
@@ -126,6 +137,6 @@ public class user {
 	*	@return a matching userToken object
 	*/
 	public userToken token(){
-		return new shared.communication.userToken(fName, lName, pw);
+		return new shared.communication.userToken(username, pw);
 	}
 }

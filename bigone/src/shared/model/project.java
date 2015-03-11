@@ -9,7 +9,7 @@ import shared.model.field;
  * a project, which has fields and batches, organizes
  * different types of indexable records.
  */
-public class project {
+public class project implements Serializable {
 	
 	private String sImg;
 	private String name;
@@ -127,4 +127,30 @@ public class project {
 	public int getRecordQuantity(){
 		return recs;
 	}	
+
+	/**
+	 * print the fields
+	 * String that has all the field info in it
+	 * @return String of formatted field vals
+	 */
+	public String printFields(){
+		StringBuilder sb = new StringBuilder();
+		for(field t : fields){
+			sb.append(t.getID());
+			sb.append("/n");
+			sb.append(t.getNumber());
+			sb.append("/n");
+			sb.append(t.getHelp());
+			sb.append("/n");
+			sb.append(t.getXCoord());
+			sb.append("/n");
+			sb.append(t.getWidth());
+			sb.append("/n");
+			if(!t.getVals().equals("")){
+				sb.append(t.getVals());
+				sb.append("/n");
+			}
+		}
+		return sb.toString();
+	}
 }

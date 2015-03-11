@@ -81,12 +81,14 @@ public class batchBlob implements Serializable {
 		sb.append("\n");
 		sb.append(p.getHeight());
 		sb.append("\n");
-		sb.append(" BAD PROBLEM: RECORD NUMBER! ");
+		sb.append(p.getRecordQuantity());
 		sb.append("\n");
 		sb.append(b.getFields());
-		sb.append("  NOT FINISHED!!!!   ");
-		// FINISH THIS.
-		return "";
+		// (number of fields)
+		sb.append("\n");
+		sb.append(p.getFields());
+		// (actual fields.  final \n implied by p.getFields())
+		return sb.toString();
 	}
 		
 }

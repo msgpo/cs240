@@ -14,20 +14,17 @@ import java.io.*;
 
 public class userToken implements Serializable{
 
-	private String fName;
-	private String lName;
+	private String username;
 	private String pw;
 	
 	/**
 	 * Construct a userToken
-	*	@param firstname the user's first name
-	* 	@param lastname the user's last name
+	*	@param uname the username
 	*	@param password the password
 	*/
 
-	public userToken(String firstname, String lastname, String password){
-		fName = firstname;
-		lName = lastname;
+	public userToken(String uname, String password){
+		username = uname;
 		pw = password;
 	}
 	
@@ -38,19 +35,15 @@ public class userToken implements Serializable{
 	*	@return true if you've matched, false otherwise
 	*/
 	public boolean auth(String password){
-		return (pw == password);
+		return (pw.equals(password));
 	}
 	
 	/**
-	 * get the username the server needs to authenticate.
-	 * if this is not in the database, server fails immediately
-	 * and sends back an authToken with the "false" flag set.
-	 * otherwise, password lookup and check proceeds.
-	 * @return the username
+	 * gets the username
+	 * @return username
 	 */
-	public String[] getName(){
-		String[] s = {fName, lName};
-		return s;
+	public String getUsername(){
+		return username;
 	}
 
 }

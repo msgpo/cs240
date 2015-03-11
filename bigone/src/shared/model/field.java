@@ -8,7 +8,7 @@ import java.io.*;
  * be indexed by a user
  */
 
-public class field {
+public class field implements Serializable{
 	
 	private String name;
 	private int ID;

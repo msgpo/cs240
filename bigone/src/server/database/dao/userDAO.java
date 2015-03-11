@@ -31,14 +31,14 @@ public class userDAO extends dao{
 	*	@return List<user> of all the users
 	*	@throws DBException if impossible
 	*/
-	public List<user> getAll() throws DBException {
+	public ArrayList<user> getAll() throws DBException {
 		ArrayList<user> result = new ArrayList<user>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			String query = "select first_name, last_name,";
 			query += " password, id, records_indexed,";
-			query += " assigned_batch from users";
+			query += " assigned_batch, username from users";
 			stmt = db.getConnection().prepareStatement(query);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -48,7 +48,8 @@ public class userDAO extends dao{
 				int id = rs.getInt(4);
 				int ri = rs.getInt(5);
 				int ab = rs.getInt(6);
-				user u = new user(fn, ln, pw, ri, id);
+				String un = rs.getString(7);
+				user u = new user(un, fn, ln, pw, ri, id);
 				u.updateRecords(ri);
 				if(ab != 9999999){
 					u.assignBatch(ab);
@@ -74,21 +75,19 @@ public class userDAO extends dao{
 
 	/**
 	*	get user password.
-	*	@param fName user's first name
-	*	@param lName user's last name
+	*	@param uname user's username
 	*	@return string password
 	*	@throws DBException when no such user exists, probably
 	*/
-	public String get(String fName, String lName) throws DBException {
+	public String get(String uname) throws DBException {
 		String result = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			String query = "select password from users where ";
-			query += "first_name = ? AND last_name = ?";
+			query += "username = ?";
 			stmt = db.getConnection().prepareStatement(query);
-			stmt.setString(1, fName);
-			stmt.setString(2, lName);
+			stmt.setString(1, uname);
 			rs = stmt.executeQuery();
 			if(rs.next()){
 				result = rs.getString(1);
@@ -120,7 +119,7 @@ public class userDAO extends dao{
 		try {
 			String query = "insert into users (first_name, ";
 			query += "last_name, password, records_indexed, ";
-			query += "assigned_batch) values (?, ?, ?, ?, ?)";
+			query += "assigned_batch, username) values (?, ?, ?, ?, ?, ?)";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setString(1, u.getFName());
 			stmt.setString(2, u.getLName());
@@ -132,6 +131,7 @@ public class userDAO extends dao{
 			else {
 				stmt.setInt(5, 9999999);
 			}
+			stmt.setString(6, u.getUsername());
 			if(stmt.executeUpdate() == 1){
 				Statement keyStmt = db.getConnection().createStatement();
 				keyRS = keyStmt.executeQuery("select last_insert_rowid()");
@@ -161,14 +161,15 @@ public class userDAO extends dao{
 		try {
 			String query = "update users set first_name = ?, ";
 			query += "last_name = ?, password = ?, records_indexed = ?, ";
-			query += "assigned_batch = ? where id = ?";
+			query += "assigned_batch = ?, username = ?, where id = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setString(1, u.getFName());
 			stmt.setString(2, u.getLName());
 			stmt.setString(3, u.getPW());
 			stmt.setInt(4, u.getRecords());
 			stmt.setInt(5, u.whichBatch());
-			stmt.setInt(6, u.getID());
+			stmt.setString(6, u.getUsername());
+			stmt.setInt(7, u.getID());
 			if(stmt.executeUpdate() != 1){
 				//more or less than one update done
 				throw new DBException("Could not update user");

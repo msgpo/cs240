@@ -37,7 +37,7 @@ public class recordDAO extends dao{
 		ResultSet rs = null;
 		try {
 			String query = "select batch_key, field_key, value, ";
-			query += "id from records";
+			query += "id, number from records";
 			stmt = db.getConnection().prepareStatement(query);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -45,7 +45,8 @@ public class recordDAO extends dao{
 				int bk = rs.getInt(1);
 				int fk = rs.getInt(2);
 				int id = rs.getInt(4);
-				record r = new record(bk, fk, id);
+				int nu = rs.getInt(5);
+				record r = new record(bk, fk, id, nu);
 				r.setValue(val);
 				result.add(r);
 			}
@@ -63,7 +64,48 @@ public class recordDAO extends dao{
 
 		return result;
 	}
-	
+
+	/**
+	*	gets a List of all the records in the DB matching search criteria
+	*	@param f the field ID
+	*	@param v the string that should "complete" that field
+	*	@return List<record> of all the records we find
+	*	@throws DBException if there's a screwup
+	*/
+	public List<record> getAll(int f, String v) throws DBException {
+		ArrayList<record> result = new ArrayList<record>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String query = "select batch_key, ";
+			query += "id, number from records where ";
+			query += "field_key = ? AND value = ?";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setInt(4, f);
+			stmt.setString(5, v);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int bk = rs.getInt(1);
+				int id = rs.getInt(2);
+				int nu = rs.getInt(3);
+				record r = new record(bk, f, id, nu);
+				r.setValue(v);
+				result.add(r);
+			}
+		}
+		catch(SQLException e){
+			DBException ee = new DBException(e.getMessage(), e);
+			logger.throwing("recordDAO", "getAll", ee);
+			throw ee;
+		}
+		finally {
+			Database.safeClose(rs);
+			Database.safeClose(stmt);
+		}
+		logger.exiting("recordDAO", "getAll");
+
+		return result;
+	}
 	
 	/**
 	*	adds a new record to the database, sets ID
@@ -75,12 +117,13 @@ public class recordDAO extends dao{
 		ResultSet keyRS = null;
 		try {
 			String query = "insert into records ";
-			query += "(batch_key, field_key, value) ";
-			query += "values (?, ?, ?)";
+			query += "(batch_key, field_key, value, number) ";
+			query += "values (?, ?, ?, ?)";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setInt(1, r.getBatch());
 			stmt.setInt(2, r.getField());
 			stmt.setString(3, r.getValue());
+			stmt.setInt(4, r.getNumber());
 			if(stmt.executeUpdate() == 1){
 				Statement keyStmt = db.getConnection().createStatement();
 				keyRS = keyStmt.executeQuery("select last_insert_rowid()");
@@ -110,12 +153,13 @@ public class recordDAO extends dao{
 		try {
 			String query = "update records set ";
 			query += "batch_key = ?, field_key = ?, value = ?, ";
-			query += "where id = ?";
+			query += "number = ?, where id = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setInt(1, r.getBatch());
 			stmt.setInt(2, r.getField());
 			stmt.setString(3, r.getValue());
-			stmt.setInt(4, r.getID());
+			stmt.setInt(4, r.getNumber());
+			stmt.setInt(5, r.getID());
 			if(stmt.executeUpdate() != 1){
 				//more or less than one update done
 				throw new DBException("Could not update record");

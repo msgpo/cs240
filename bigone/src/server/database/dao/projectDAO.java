@@ -64,7 +64,47 @@ public class projectDAO extends dao{
 
 		return result;
 	}
-	
+
+	/**
+	*	gets a project, by the ID number
+	*	@param p project ID
+	*	@return project
+	*	@throws DBException if impossible
+	*/
+	public project get(int p) throws DBException {
+		project result = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String query = "select from projects sample_image, title, y_coord, ";
+			query += "rec_height, record_quantity where id = ? ";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setInt(1, p);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				String si = rs.getString(1);
+				String ti = rs.getString(2);
+				int yc = rs.getInt(3);
+				int rh = rs.getInt(4);
+				int rq = rs.getInt(5);
+				int id = rs.getInt(6);
+				result = new project(si, ti, id, yc, rh, rq);
+			}
+		}
+		catch(SQLException e){
+			DBException ee = new DBException(e.getMessage(), e);
+			logger.throwing("projectDAO", "get", ee);
+			throw ee;
+		}
+		finally {
+			Database.safeClose(rs);
+			Database.safeClose(stmt);
+		}
+		logger.exiting("projectDAO", "get");
+
+		return result;
+	}
+
 	
 	/**
 	*	adds a new project to the database, sets ID

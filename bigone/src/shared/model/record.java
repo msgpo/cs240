@@ -7,23 +7,26 @@ import java.io.*;
  * with a field in a batch
  */
 
-public class record {
+public class record implements Serializable{
 	
 	private int batchID;
 	private int fieldID;
 	private int ID;
 	private String val;
+	private int num;
 
 	/**
 	 * Construct a new record
 	*	@param bID the batch this record will belong to
 	* 	@param fID the field this record "completes"
 	* 	@param rID the ID of this record (zero before put in DB)
+	* 	@param rNum the number of this record in a batch
 	*/
-	public record(int bID, int fID, int rID){
+	public record(int bID, int fID, int rID, int rNum){
 		batchID = bID;
 		fieldID = fID;
 		ID = rID;
+		num = rNum;
 	}
 
 	/**
@@ -72,5 +75,13 @@ public class record {
 	 */
 	public int getField(){
 		return fieldID;
+	}
+	
+	/**
+	 * get the number of this record in the batch
+	 * @return int which is the "row" in a batch
+	 */
+	public int getNumber(){
+		return num;
 	}
 }

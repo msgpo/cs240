@@ -21,13 +21,13 @@ public class searchBlob implements Serializable {
 	*	@param bid the ID of the batch
 	*	@param imageURL URL of batch image
 	*	@param recordNumber the record number
-	*	@param fieldNumber the field number
+	*	@param fieldID the field ID
 	*/
-	public searchBlob(int bid, String imageURL, int recordNumber, int fieldNumber){
+	public searchBlob(int bid, String imageURL, int recordNumber, int fieldID){
 		batchID = bid;
 		image = imageURL;
 		rNum = recordNumber;
-		fNum = fieldNumber;
+		fNum = fieldID;
 		failure = false;
 	}
 
@@ -57,9 +57,18 @@ public class searchBlob implements Serializable {
 		}
 		
 		StringBuilder sb = new StringBuilder();
+		sb.append(batchID);
+		sb.append("/n");
+		sb.append(image);
+		sb.append("/n");
+		sb.append(rNum);
+		sb.append("/n");
+		sb.append(fNum);
+		sb.append("/n");
 		
-		return "   BROKEN!  FIGURE OUT HOW FIELDS AND RECORDS WORK  ";
-		// whoops
+		
+		return sb.toString();
+		// whoops, gotta go make changes in the DB...
 	}
 }
 
