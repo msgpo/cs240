@@ -123,4 +123,28 @@ public class batch implements Serializable {
 		return sImg;
 	}
 	
+	/**
+	 * tests for equality
+	 * @param o object to compare
+	 * @return true if the same, false otherwise
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+		if(!(o instanceof batch)){
+			return false;
+		}
+		
+		batch c = (batch) o;
+		
+		return
+		(	sImg.equals(c.getImage()) 	&&
+			(ID == c.getID())			&&
+			(owned == c.isOwned())		&&
+			(numFields == c.getFields())&&
+			(pID == c.getProject())
+		);
+	}
 }

@@ -50,8 +50,9 @@ public class userDAO extends dao{
 				int ab = rs.getInt(6);
 				String un = rs.getString(7);
 				user u = new user(un, fn, ln, pw, ri, id);
-				u.updateRecords(ri);
-				if(ab != 9999999){
+				// funny bug here from changing the constructor:
+				// i ended up doubling the records each get!
+				if(ab != -1){
 					u.assignBatch(ab);
 				}
 				
@@ -129,7 +130,7 @@ public class userDAO extends dao{
 				stmt.setInt(5, u.whichBatch());
 			}
 			else {
-				stmt.setInt(5, 9999999);
+				stmt.setInt(5, -1);
 			}
 			stmt.setString(6, u.getUsername());
 			if(stmt.executeUpdate() == 1){
@@ -161,7 +162,7 @@ public class userDAO extends dao{
 		try {
 			String query = "update users set first_name = ?, ";
 			query += "last_name = ?, password = ?, records_indexed = ?, ";
-			query += "assigned_batch = ?, username = ?, where id = ?";
+			query += "assigned_batch = ?, username = ? where id = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setString(1, u.getFName());
 			stmt.setString(2, u.getLName());

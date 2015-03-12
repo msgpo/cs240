@@ -14,6 +14,9 @@ public class ServerUnitTests {
 	public void teardown() {
 	}
 	
+	
+	//  later, stick some code in here to verify the main server
+	//  bits, i guess
 	@Test
 	public void test_1() {
 		assertEquals("OK", "OK");
@@ -25,7 +28,11 @@ public class ServerUnitTests {
 		
 		String[] testClasses = new String[] {
 				"server.ServerUnitTests",
-				"server.userDAOTest"
+				"server.userDAOTest",
+				"server.projectDAOTest",
+				"server.batchDAOTest",
+				"server.fieldDAOTest",
+				"server.recordDAOTest",
 		};
 
 		org.junit.runner.JUnitCore.main(testClasses);

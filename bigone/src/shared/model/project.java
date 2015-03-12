@@ -153,4 +153,25 @@ public class project implements Serializable {
 		}
 		return sb.toString();
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+		if(!(o instanceof project)){
+			return false;
+		}
+		
+		project c = (project) o;
+		
+		return (
+			sImg.equals(c.getImage()) &&
+			name.equals(c.getTitle()) &&
+			(ID == c.getID()) &&
+			(recs == c.getRecordQuantity()) &&
+			(y == c.getYCoord()) &&
+			(h == c.getHeight())
+		);
+	}	
 }

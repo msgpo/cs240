@@ -84,4 +84,28 @@ public class record implements Serializable{
 	public int getNumber(){
 		return num;
 	}
+	
+	/**
+	 * equality test
+	 * @param o the object to compare
+	 * @return true if same, false otherwise
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+		if(!(o instanceof record)){
+			return false;
+		}
+		
+		record c = (record) o;
+		
+		return
+		(	(batchID == c.getBatch())	&&
+			(fieldID == c.getField())	&&
+			(ID ==	c.getID())			&&
+			(val.equals(c.getValue()))
+		);
+	}
 }

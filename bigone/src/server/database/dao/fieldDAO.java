@@ -31,7 +31,7 @@ public class fieldDAO extends dao{
 	*	@return List<field> of all the fields
 	*	@throws DBException if impossible
 	*/
-	public List<field> getAll() throws DBException {
+	public ArrayList<field> getAll() throws DBException {
 		ArrayList<field> result = new ArrayList<field>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

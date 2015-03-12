@@ -22,7 +22,7 @@ public class userDAOTest {
 	
 	@After
 	public void teardown(){
-		//no idea
+		db.endTX(false);
 	}
 	
 	@Test
@@ -32,8 +32,10 @@ public class userDAOTest {
 		db.startTX();
 		db.getUserDAO().add(u);
 		ArrayList<user> ret = db.getUserDAO().getAll();
-		assertTrue("added user should be alone in DB", ret.contains(u));
-		assertEquals("get user by id", u, db.getUserDAO().get("jj"));
+		assertEquals("added user should be alone in DB", u,
+				ret.get(0));
+		assertEquals("get userpass", u.getPW(), 
+				db.getUserDAO().get("jj"));
 	
 		db.endTX(false);
 	}
@@ -67,7 +69,7 @@ public class userDAOTest {
 		db.getUserDAO().add(u1);
 		user u2 = new user("k", "k", "k", "un", 0, u1.getID());
 		db.getUserDAO().update(u2);
-		assertEquals("original user should equal modified user", u2, 
+		assertEquals("original user PW should equal new PW", u2.getPW(), 
 				db.getUserDAO().get("k"));
 		
 		db.endTX(false);

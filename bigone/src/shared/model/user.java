@@ -14,7 +14,6 @@ public class user implements Serializable{
 	private String fName;
 	private String lName;
 	private String username;
-	private String un;
 	private String pw;
 	private int rec;
 	private int id;
@@ -35,7 +34,6 @@ public class user implements Serializable{
 		username = uname;
 		fName = firstName;
 		lName = lastName;
-		un = firstName + " " + lastName;
 		pw = password;
 		rec = records;
 		id = userID;
@@ -138,5 +136,43 @@ public class user implements Serializable{
 	*/
 	public userToken token(){
 		return new shared.communication.userToken(username, pw);
+	}
+	
+	/**
+	 * equals method
+	 * @param o any object
+	 * @return true if equals, false otherwise
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+		if(!(o instanceof user)){
+			return false;
+		}
+		user c = (user) o;
+		
+		boolean test =
+			(	fName.equals(c.getFName()) &&
+				lName.equals(c.getLName()) &&
+				username.equals(c.getUsername()) &&
+				(id == c.getID()) &&
+				pw.equals(c.getPW()) &&
+				(rec == c.getRecords()) &&
+				(hasBatch == c.hasBatch())
+			);
+
+		return test;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(fName + " " + lName +"\n");
+		sb.append(username + " " + pw + "\n");
+		sb.append(rec + " " + hasBatch + "\n");
+		sb.append(id + "\n");
+		return sb.toString();
 	}
 }

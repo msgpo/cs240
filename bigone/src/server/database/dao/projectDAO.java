@@ -31,7 +31,7 @@ public class projectDAO extends dao{
 	*	@return List<project> of all the projects
 	*	@throws DBException if impossible
 	*/
-	public List<project> getAll() throws DBException {
+	public ArrayList<project> getAll() throws DBException {
 		ArrayList<project> result = new ArrayList<project>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -76,8 +76,9 @@ public class projectDAO extends dao{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			String query = "select from projects sample_image, title, y_coord, ";
-			query += "rec_height, record_quantity where id = ? ";
+			String query = "select sample_image, title, y_coord, ";
+			query += "rec_height, record_quantity ";
+			query += "from projects where id = ? ";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setInt(1, p);
 			rs = stmt.executeQuery();
@@ -87,8 +88,7 @@ public class projectDAO extends dao{
 				int yc = rs.getInt(3);
 				int rh = rs.getInt(4);
 				int rq = rs.getInt(5);
-				int id = rs.getInt(6);
-				result = new project(si, ti, id, yc, rh, rq);
+				result = new project(si, ti, p, yc, rh, rq);
 			}
 		}
 		catch(SQLException e){
@@ -151,7 +151,7 @@ public class projectDAO extends dao{
 	public void update(project p) throws DBException {
 		PreparedStatement stmt = null;
 		try {
-			String query = "update users set sample_image = ?, ";
+			String query = "update projects set sample_image = ?, ";
 			query += "title = ?, y_coord = ?, rec_height = ?, ";
 			query += "record_quantity = ? where id = ?";
 			stmt = db.getConnection().prepareStatement(query);

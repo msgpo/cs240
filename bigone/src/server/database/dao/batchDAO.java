@@ -31,7 +31,7 @@ public class batchDAO extends dao{
 	*	@return List<batch> of all the batches
 	*	@throws DBException if impossible
 	*/
-	public List<batch> getAll() throws DBException {
+	public ArrayList<batch> getAll() throws DBException {
 		ArrayList<batch> result = new ArrayList<batch>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -48,7 +48,7 @@ public class batchDAO extends dao{
 				int id = rs.getInt(5);
 				batch b = new batch(iu, id, pk);
 				b.setFields(fq);
-				if(ob != 9999999){
+				if(ob != -1){
 					b.updateUser(ob);
 				}
 				result.add(b);
@@ -89,7 +89,7 @@ public class batchDAO extends dao{
 				stmt.setInt(4, b.whichUser());
 			}
 			else {
-				stmt.setInt(4, 9999999);
+				stmt.setInt(4, -1);
 			}
 			if(stmt.executeUpdate() == 1){
 				Statement keyStmt = db.getConnection().createStatement();
@@ -129,7 +129,7 @@ public class batchDAO extends dao{
 				stmt.setInt(4, b.whichUser());
 			}
 			else {
-				stmt.setInt(4, 9999999);
+				stmt.setInt(4, -1);
 			}
 			stmt.setInt(5, b.getID());
 			if(stmt.executeUpdate() != 1){
@@ -153,7 +153,7 @@ public class batchDAO extends dao{
 	public void delete(batch b) throws DBException {
 		PreparedStatement stmt = null;
 		try {
-			String query = "delete from batchs where id = ?";
+			String query = "delete from batches where id = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setInt(1, b.getID());
 			if(stmt.executeUpdate() != 1){

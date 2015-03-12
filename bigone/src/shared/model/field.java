@@ -116,4 +116,32 @@ public class field implements Serializable{
 	public int getProject(){
 		return projID;
 	}
+	
+	/**
+	 * test for equality
+	 * @param o object to test
+	 * @return true if the same, false otherwise
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+		if(!(o instanceof field)){
+			return false;
+		}
+		
+		field c = (field) o;
+		
+		return
+		(	name.equals(c.getTitle()) 	&&
+			(ID == c.getID())			&&
+			(n == c.getNumber())		&&
+			h.equals(c.getHelp())		&&
+			vals.equals(c.getVals())	&&
+			(x == c.getXCoord())		&&
+			(w == c.getWidth())			&&
+			(projID == c.getProject())	
+		);
+	}
 }

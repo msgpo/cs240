@@ -31,7 +31,7 @@ public class recordDAO extends dao{
 	*	@return List<record> of all the records
 	*	@throws DBException if impossible
 	*/
-	public List<record> getAll() throws DBException {
+	public ArrayList<record> getAll() throws DBException {
 		ArrayList<record> result = new ArrayList<record>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -72,7 +72,7 @@ public class recordDAO extends dao{
 	*	@return List<record> of all the records we find
 	*	@throws DBException if there's a screwup
 	*/
-	public List<record> getAll(int f, String v) throws DBException {
+	public ArrayList<record> getAll(int f, String v) throws DBException {
 		ArrayList<record> result = new ArrayList<record>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -153,7 +153,7 @@ public class recordDAO extends dao{
 		try {
 			String query = "update records set ";
 			query += "batch_key = ?, field_key = ?, value = ?, ";
-			query += "number = ?, where id = ?";
+			query += "number = ? where id = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setInt(1, r.getBatch());
 			stmt.setInt(2, r.getField());
