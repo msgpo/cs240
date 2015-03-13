@@ -14,6 +14,7 @@ public class record implements Serializable{
 	private int ID;
 	private String val;
 	private int num;
+	private int fnumber;
 
 	/**
 	 * Construct a new record
@@ -28,6 +29,31 @@ public class record implements Serializable{
 		ID = rID;
 		num = rNum;
 	}
+
+	/** 
+	 * alt constructor: contains field number, not field ID
+	 *	@param bID the batch this record is from
+	 *	@param fNum the field this record completes
+	 *	@param rNum the record number
+	 *	@param value the value
+	 */
+	public record(int bID, int fNum, int rNum, String value){
+		batchID = bID;
+		num = rNum;
+		val = value;
+		fnumber = fNum;
+		ID = 0;
+	}
+
+	/**
+	*	reveal the field number
+	*	@return field number
+	*/
+	public int getFieldNumber(){
+		return fnumber;
+		// not stored in database, saved for convenience while updating a batch
+	}
+	
 
 	/**
 	 * reveal this record's indexed value
@@ -75,6 +101,14 @@ public class record implements Serializable{
 	 */
 	public int getField(){
 		return fieldID;
+	}
+
+	/**
+	*	set the field ID
+	*	@param i the field's ID
+	*/
+	public void setField(int i){
+		fieldID = i;
 	}
 	
 	/**

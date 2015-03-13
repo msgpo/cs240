@@ -14,6 +14,7 @@ public class batch implements Serializable {
 	private LinkedList<record> records;
 	private int numFields;
 	private int pID;
+	private int done;
 	
 	/**
 	 * Constructs a new batch.
@@ -25,6 +26,8 @@ public class batch implements Serializable {
 		sImg = image;
 		ID = id;
 		pID = project;
+		uid = -1;
+		done = 0;
 	}
 	
 	/**
@@ -33,6 +36,22 @@ public class batch implements Serializable {
 	 */
 	public int getProject(){
 		return pID;
+	}
+	
+	/** 
+	 * update how many records have been done
+	 * @param r records to add
+	 */
+	public void updateRecords(int r){
+		done += r;
+	}
+	
+	/**
+	 * reveal how many records have been done
+	 * @return int records indexed
+	 */
+	public int getIndexed(){
+		return done;
 	}
 	
 	/**
@@ -144,7 +163,8 @@ public class batch implements Serializable {
 			(ID == c.getID())			&&
 			(owned == c.isOwned())		&&
 			(numFields == c.getFields())&&
-			(pID == c.getProject())
+			(pID == c.getProject())		&&
+			(done == c.getIndexed())
 		);
 	}
 }

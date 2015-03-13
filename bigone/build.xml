@@ -9,6 +9,7 @@
 	<property name="demo" location="demo"/>
 	<property name="docs" location="docs"/>
 	<property name="passoff" location="passoff"/>
+	<property name="data" location="data"/>
 	<property name="db-file" location="${database}/stowage.db"/>
 	<property name="empty-db-file" location="${database}/stowage.emptydb"/>
 
@@ -58,6 +59,11 @@
 	<target name="import" depends="compile" 
 			description="import indexer data, default no file">
 		<copy file="${empty-db-file}" tofile="${db-file}" overwrite="true"/>
+		<delete dir="${data}" />
+		<mkdir dir="${data}" />
+		<mkdir dir="${data}/images" />
+		<mkdir dir="${data}/fieldhelp" />
+		<mkdir dir="${data}/knowndata" />
 		<java classname="server.importer" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
@@ -95,6 +101,7 @@
 		</java>
 	</target>
 	<target name="server-tests" depends="compile" description="run automated server tests">
+		<copy file="${empty-db-file}" tofile="${db-file}" overwrite="true"/>
 		<java classname="server.ServerUnitTests" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
@@ -138,5 +145,8 @@
 	<target name="doc">
 		<delete dir="${docs}"/>
 		<javadoc sourcepath="${src}" destdir="${docs}"/>
+	</target>
+	<target name="wc">
+		<exec executable="./.lines" />
 	</target>
 </project>

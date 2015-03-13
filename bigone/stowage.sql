@@ -24,7 +24,7 @@ CREATE TABLE batches
 	image_url TEXT,
 	field_quantity NUMERIC,
 	owned_by NUMERIC,
-	lock_flag NUMERIC,
+	indexed INTEGER,
 	proj_key INTEGER,
 	FOREIGN KEY(proj_key) REFERENCES projects(id)
 );

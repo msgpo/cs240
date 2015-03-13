@@ -106,6 +106,89 @@ public class recordDAO extends dao{
 
 		return result;
 	}
+
+	/**
+	*	tells if a certain record is in the DB
+	*	@param bID batch ID
+	*	@param fNum field number
+	*	@param rNum record number
+	*	@return -1 if absent, rID if in DB 
+	* 	@throws DBException if faults
+	*/
+	public int checkPresence(int bID, int fNum, int rNum) throws DBException {
+		int ret = -1;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		// get field key first
+		int pID = -1;
+		int fKey = -1;
+		try {
+			String query = "select proj_key from batches ";
+			query += "where	id = ?";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setInt(1, bID);
+			rs = stmt.executeQuery();
+			if(rs.next()){
+				pID = rs.getInt(1);
+			}
+			else {
+				//do nothing, pID stays -1
+			}
+		}
+		catch(SQLException e){
+			DBException ee = new DBException(e.getMessage(), e);
+			logger.throwing("recordDAO", "checkPresence", ee);
+			throw ee;
+		}
+		try {
+			String query = "select id from fields ";
+			query += "where	proj_key = ? and field_number = ?";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setInt(1, pID);
+			stmt.setInt(2, fNum);
+			rs = stmt.executeQuery();
+			if(rs.next()){
+				fKey = rs.getInt(1);
+			}
+			else {
+				//do nothing, fKey stays -1
+			}
+		}
+		catch(SQLException e){
+			DBException ee = new DBException(e.getMessage(), e);
+			logger.throwing("recordDAO", "checkPresence", ee);
+			throw ee;
+		}
+		try {
+			String query = "select id ";
+			query += "from records where ";
+			query += "field_key = ? AND batch_key = ? AND number = ?";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setInt(1, fKey);
+			stmt.setInt(2, bID);
+			stmt.setInt(3, rNum);
+			rs = stmt.executeQuery();
+			if(rs.next()){
+				ret = rs.getInt(1);
+			}
+			else {
+				// do nothing, ret stays -1
+			}
+		}
+		catch(SQLException e){
+			DBException ee = new DBException(e.getMessage(), e);
+			logger.throwing("recordDAO", "checkPresence", ee);
+			throw ee;
+		}
+		finally {
+			Database.safeClose(rs);
+			Database.safeClose(stmt);
+		}
+		logger.exiting("recordDAO", "getAll");
+
+		return ret;
+	}
+	
 	
 	/**
 	*	adds a new record to the database, sets ID

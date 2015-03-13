@@ -67,6 +67,93 @@ public class fieldDAO extends dao{
 
 		return result;
 	}
+
+	/**
+	*	gets a List of all the fields in the DB for a project
+	*	@param pID the project ID
+	*	@return List<field> of all the fields
+	*	@throws DBException if impossible
+	*/
+	public ArrayList<field> getAll(int pID) throws DBException {
+		ArrayList<field> result = new ArrayList<field>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String query = "select title, x_coord, ";
+			query += "width, help_url, known_value_url, ";
+			query += "field_number, id from fields ";
+			query += "where proj_key = ?";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setInt(1, pID);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int pk= pID;
+				String ti = rs.getString(1);
+				int xc = rs.getInt(2);
+				int fw = rs.getInt(3);
+				String hu = rs.getString(4);
+				String kv = rs.getString(5);
+				int fn = rs.getInt(6);
+				int id = rs.getInt(7);
+				field f = new field(ti, id, fn, fw, xc, kv, hu, pk);
+				result.add(f);
+			}
+		}
+		catch(SQLException e){
+			DBException ee = new DBException(e.getMessage(), e);
+			logger.throwing("fieldDAO", "getAll", ee);
+			throw ee;
+		}
+		finally {
+			Database.safeClose(rs);
+			Database.safeClose(stmt);
+		}
+		logger.exiting("fieldDAO", "getAll");
+
+		return result;
+	}
+
+
+	/**
+	*	gets a the ID of a field
+	*	@param pKey the project ID
+	*	@param fNum the field number
+	*	@return ID of this field or -1 if not exist
+	*	@throws DBException if impossible
+	*/
+	public int getID(int pKey, int fNum) throws DBException {
+		int ret = -1;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String query = "select id ";
+			query += "from fields where ";
+			query += "proj_key = ?, field_number = ?";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setInt(1, pKey);
+			stmt.setInt(2, fNum);
+			rs = stmt.executeQuery();
+			if(rs.next()){
+				ret = rs.getInt(1);
+			}
+			else {
+				// do nothing, -1 will be returned
+			}
+		}
+		catch(SQLException e){
+			DBException ee = new DBException(e.getMessage(), e);
+			logger.throwing("fieldDAO", "getID", ee);
+			throw ee;
+		}
+		finally {
+			Database.safeClose(rs);
+			Database.safeClose(stmt);
+		}
+		logger.exiting("fieldDAO", "getID");
+
+		return ret;
+	}
+
 	
 	
 	/**

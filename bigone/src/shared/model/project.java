@@ -122,7 +122,7 @@ public class project implements Serializable {
 	
 	/**
 	 * reveal how many records (rows) batches in this project has
-	 * @return the number of records already indexed
+	 * @return the number of records this project should have
 	 */
 	public int getRecordQuantity(){
 		return recs;

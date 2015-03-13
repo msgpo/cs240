@@ -107,6 +107,52 @@ public class userDAO extends dao{
 		return result;
 	}
 	
+	/** 
+	 * get user details
+	 * @param uname user's username
+	 * @param pass user's password
+	 * @return a user object
+	 * @throws DBException if something messes up
+	 */
+	public user get(String uname, String pass) throws DBException {
+		user ret = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			String query = "select first_name, last_name, ";
+			query += "id, records_indexed, assigned_batch, from users ";
+			query += "where password = ? and username = ?";
+			stmt = db.getConnection().prepareStatement(query);
+			stmt.setString(1, pass);
+			stmt.setString(2, uname);
+			rs = stmt.executeQuery();
+			if(rs.next()){
+				String fn = rs.getString(1);
+				String ln = rs.getString(2);
+				int id = rs.getInt(3);
+				int ri = rs.getInt(4);
+				int ab = rs.getInt(5);
+				ret = new user(uname, fn, ln, pass, ri, id);
+				if(ab != -1){
+					ret.assignBatch(ab);
+				}
+			}
+			else {
+				throw new DBException("no such user");
+			}
+		}
+		catch(SQLException e){
+			throw new DBException("get utoken error", e);
+		}
+		finally {
+			Database.safeClose(rs);
+			Database.safeClose(stmt);
+		}
+		return ret;
+	}	
+		
+		
+	
 	/**
 	*	adds a new user to the database, sets user's new ID
 	*	@param u user to be put in
