@@ -12,9 +12,7 @@ import shared.model.project;
 
 public class batchDAOTest {
 	
-	private Database db = 
-			new Database
-			("/Users/rt/workspaces/cs240/bigone/stowage.db");
+	private Database db = new Database("stowage.db");
 	
 	@BeforeClass
 	public static void setUp() throws DBException{

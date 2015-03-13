@@ -11,9 +11,9 @@ import shared.model.project;
 
 public class projectDAOTest {
 	
-	private server.database.Database db = 
-			new server.database.Database
-			("/Users/rt/workspaces/cs240/bigone/stowage.db");
+	private Database db = new Database("stowage.db");
+		//	new Database
+		//	("/Users/rt/workspaces/cs240/bigone/stowage.db");
 		// funny bug here:
 		// I did sed s/User/Project/g to clean up a few
 		// typos I missed, but that also screwed up my

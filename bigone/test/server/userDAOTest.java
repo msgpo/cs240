@@ -11,9 +11,7 @@ import shared.model.*;
 
 public class userDAOTest {
 	
-	private server.database.Database db = 
-			new server.database.Database
-			("/Users/rt/workspaces/cs240/bigone/stowage.db");
+	private Database db = new Database("stowage.db");	
 	
 	@BeforeClass
 	public static void setUp() throws DBException{
