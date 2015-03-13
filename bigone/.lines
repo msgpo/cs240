@@ -1,0 +1,4 @@
+echo main source lines:
+wc -l `find src/ -type f` | grep total
+echo test source lines:
+wc -l `find test/ -type f` | grep total

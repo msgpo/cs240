@@ -1,0 +1,20 @@
+package server;
+
+import java.io.*;
+import java.util.*;
+
+import shared.model.*;
+
+public class importData {
+	
+	private ArrayList<user> users = new ArrayList<user>();
+	private ArrayList<project> projects = new ArrayList<project>();
+	private ArrayList<batch> batches = new ArrayList<batch>();
+	private ArrayList<field> fields = new ArrayList<field>();
+	private ArrayList<record> records = new ArrayList<record>();
+	
+	importData(Element root){
+		
+		ArrayList<Element> rootElements = importer.getChildElements(root);
+		
+		
