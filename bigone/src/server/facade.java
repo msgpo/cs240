@@ -137,10 +137,26 @@ public class facade {
 			}
 			else {
 				db.startTX();
+				user u = db.getUserDAO().get(t.getUsername(),
+						db.getUserDAO().get(t.getUsername()));
+				if(u.hasBatch()){
+					throw new ServerException("user has batch already");
+				}
+
 				project p = db.getProjectDAO().get(id);
+				ArrayList<field> flist = db.getFieldDAO().getAll(id);
+				for(field f : flist){
+					p.addField(f);
+				}
 				batch b = db.getBatchDAO().get(id);
 				bb.addProject(p);
 				bb.addBatch(b);
+				// need to make assignments
+				b.updateUser(u.getID());
+				u.assignBatch(b.getID());
+				db.getBatchDAO().update(b);
+				db.getUserDAO().update(u);
+
 				db.endTX(true); // DB HAS CHANGED!
 				return bb;
 			}

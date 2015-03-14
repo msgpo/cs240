@@ -10,8 +10,8 @@ import shared.model.project;
  */
 public class projList implements Serializable{
 	
-	private List<project> proj;
-	private boolean failure;
+	private ArrayList<project> proj = new ArrayList<project>();
+	private boolean failure = false;
 
 	/**
 	*	Constructs a new project list

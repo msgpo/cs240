@@ -3,10 +3,14 @@ package servertester.controllers;
 import java.util.*;
 
 import servertester.views.*;
+import client.communicator;
+import shared.communication.*;
+import shared.model.*;
 
 public class Controller implements IController {
 
 	private IView _view;
+	private communicator comm;
 	
 	public Controller() {
 		return;
@@ -70,6 +74,10 @@ public class Controller implements IController {
 
 	@Override
 	public void executeOperation() {
+		
+		comm = new communicator(getView().getHost(), 
+				Integer.parseInt(getView().getPort()));
+
 		switch (getView().getOperation()) {
 		case VALIDATE_USER:
 			validateUser();
@@ -99,21 +107,81 @@ public class Controller implements IController {
 	}
 	
 	private void validateUser() {
+		String[] input = getView().getParameterValues();
+		userToken t = new userToken(input[0], input[1]);
+		getView().setRequest(t.toString());
+		try{
+			authToken a = comm.validateUser(t);
+			getView().setResponse(a.toString());
+		}
+		catch(Exception e){
+			getView().setResponse("FAILED\n");
+		}
 	}
 	
 	private void getProjects() {
+		String[] input = getView().getParameterValues();
+		userToken t = new userToken(input[0], input[1]);
+		getView().setRequest(t.toString());
+		try{
+			projList pl = comm.getProjects(t);
+			getView().setResponse(pl.toString());
+		}
+		catch(Exception  e){
+			getView().setResponse("FAILED\n");
+		}
 	}
 	
 	private void getSampleImage() {
+		String[] input = getView().getParameterValues();
+		userToken t = new userToken(input[0], input[1]);
+		int id = Integer.parseInt(input[2]);
+		getView().setRequest(t.toString() + id + "\n");
+		try{
+			String s = comm.getSampleImage(t,id);
+			getView().setResponse(comm.getURL() + s + "\n");
+		}
+		catch(Exception  e){
+			getView().setResponse("FAILED\n");
+		}
 	}
 	
 	private void downloadBatch() {
+		String[] input = getView().getParameterValues();
+		userToken t = new userToken(input[0], input[1]);
+		int id = Integer.parseInt(input[2]);
+		getView().setRequest(t.toString() + id + "\n");
+		try{
+			batchBlob bb = comm.downloadBatch(t,id);
+			getView().setResponse(bb.toString());
+		}
+		catch(Exception  e){
+			getView().setResponse("FAILED\n");
+		}
 	}
 	
 	private void getFields() {
 	}
 	
 	private void submitBatch() {
+		String[] input = getView().getParameterValues();
+		userToken t = new userToken(input[0], input[1]);
+		int id = Integer.parseInt(input[2]);
+		String p = input[3];
+		batchProposal bp = new batchProposal(id, p);
+		getView().setRequest(t.toString() + id + "\n" + p + "\n");
+		try{
+			boolean res = comm.submitBatch(t, bp);
+			if(res){
+				getView().setResponse("TRUE\n");
+			}
+			else{
+				getView().setResponse("FAILED\n");
+			}
+		}
+		catch(Exception  e){
+			getView().setResponse("FAILED\n");
+		}
 	}
 	
 	private void search() {

@@ -14,7 +14,7 @@ public class project implements Serializable {
 	private String sImg;
 	private String name;
 	private int ID;
-	private LinkedList<field> fields;
+	private ArrayList<field> fields = new ArrayList<field>();
 	private LinkedList<batch> batches;
 	private int y;
 	private int recs;
@@ -88,21 +88,22 @@ public class project implements Serializable {
 		ID = i;
 	}
 
-	/**
-	*	give the "next" batch back
-	*	@return a batch from the project
-	*/
-	public LinkedList<batch> getBatches(){
-		return batches;
-	}
-
-	/**
-	*	give the "next" field back
-	*	@return a field from the project
-	*/
-	public LinkedList<field> getFields(){
-		return fields;
-	}
+//		not used in this incarnation, will be handy with the client
+//	/**
+//	*	give the "next" batch back
+//	*	@return a batch from the project
+//	*/
+//	public LinkedList<batch> getBatches(){
+//		return batches;
+//	}
+//
+//	/**
+//	*	give the "next" field back
+//	*	@return a field from the project
+//	*/
+//	public LinkedList<field> getFields(){
+//		return fields;
+//	}
 	
 	/**
 	 * reveal the first y-coordinate
@@ -131,24 +132,28 @@ public class project implements Serializable {
 	/**
 	 * print the fields
 	 * String that has all the field info in it
+	 * @param prefix to append to URLs
 	 * @return String of formatted field vals
 	 */
-	public String printFields(){
+	public String printFields(String prefix){
 		StringBuilder sb = new StringBuilder();
 		for(field t : fields){
 			sb.append(t.getID());
-			sb.append("/n");
+			sb.append("\n");
 			sb.append(t.getNumber());
-			sb.append("/n");
+			sb.append("\n");
+			sb.append(t.getTitle());
+			sb.append("\n");
 			sb.append(t.getHelp());
-			sb.append("/n");
+			sb.append("\n");
 			sb.append(t.getXCoord());
-			sb.append("/n");
+			sb.append("\n");
 			sb.append(t.getWidth());
-			sb.append("/n");
+			sb.append("\n");
 			if(!t.getVals().equals("")){
+				sb.append(prefix);
 				sb.append(t.getVals());
-				sb.append("/n");
+				sb.append("\n");
 			}
 		}
 		return sb.toString();

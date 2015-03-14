@@ -12,6 +12,7 @@ import shared.model.project;
 
 public class batchBlob implements Serializable {
 	
+	private String prefix = "";
 	private project p;
 	private batch b;
 	private int projID;
@@ -63,6 +64,14 @@ public class batchBlob implements Serializable {
 	}
 
 	/**
+	*	sets prefix for printing URLs
+	*	@param s the string to use as a prefix
+	*/
+	public void setPrefix(String s){
+		prefix = s;
+	}
+
+	/**
 	 * gives a formatted "result" string
 	*	@return returns string representation of batch
 	*/
@@ -86,7 +95,7 @@ public class batchBlob implements Serializable {
 		sb.append(b.getFields());
 		// (number of fields)
 		sb.append("\n");
-		sb.append(p.getFields());
+		sb.append(p.printFields(prefix));
 		// (actual fields.  final \n implied by p.getFields())
 		return sb.toString();
 	}

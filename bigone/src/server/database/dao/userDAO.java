@@ -120,7 +120,7 @@ public class userDAO extends dao{
 		ResultSet rs = null;
 		try {
 			String query = "select first_name, last_name, ";
-			query += "id, records_indexed, assigned_batch, from users ";
+			query += "id, records_indexed, assigned_batch from users ";
 			query += "where password = ? and username = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setString(1, pass);

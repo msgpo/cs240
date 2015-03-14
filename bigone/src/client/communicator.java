@@ -21,6 +21,14 @@ public class communicator {
 	
 	private String urlBase;
 	private XStream xml;
+
+	/**
+	*	get current URL 
+	* 	@return url as string
+	*/
+	public String getURL(){
+		return urlBase + "/";
+	}
 	
 	/**
 	*	starts the communicator class, which can then communicate 
@@ -80,7 +88,9 @@ public class communicator {
 	public batchBlob downloadBatch(userToken t, int id)
 			throws ClientException{
 		Object[] a = {t, id};
-		return (batchBlob)doPost("/downloadBatch", a);
+		batchBlob bb = (batchBlob)doPost("/downloadBatch", a);
+		bb.setPrefix(getURL());
+		return bb;
 	}
 
 	/**

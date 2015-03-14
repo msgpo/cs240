@@ -31,7 +31,7 @@ public class validateUserHandler implements HttpHandler {
 		}
 		catch (ServerException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, -1);
+	    exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, -1);
 			return;
 		}
 		

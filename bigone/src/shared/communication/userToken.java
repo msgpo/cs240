@@ -5,10 +5,10 @@ import java.io.*;
 
 /** 
 *	a userToken encapsulates the user data relevant to 
-* 	authentication.  it keeps the password and username
+* 	authentication;  it keeps the password and username
 * 	secret during transmission from client to server,
 * 	and the server can only check if a username/password
-* 	combination is correct.  the password submitted is hidden
+* 	combination is correct;  the password submitted is hidden
 * 	from the server.
 */
 
@@ -44,6 +44,15 @@ public class userToken implements Serializable{
 	 */
 	public String getUsername(){
 		return username;
+	}
+
+	/**
+	* unfortunately, i must do a tostring here
+	* @return the string representation of this object
+	*/
+	@Override
+	public String toString(){
+		return username + "\n" + pw + "\n";
 	}
 
 }

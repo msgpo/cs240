@@ -74,6 +74,10 @@
 			</assertions>
 		</java>
 	</target>
+	<target name="reset-data"
+			description="reset the DB to the test example quicky">
+		<copy file="stowage.fulldb" tofile="${db-file}" overwrite="true"/>
+	</target>
 	<!-- ant server {-Dport=<SERVER_PORT_NUMBER>} -->
 	<!-- EXAMPLE: ant server -Dport=39640 -->
 	<!-- If port number is omitted, run on default port. -->

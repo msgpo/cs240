@@ -41,7 +41,7 @@ public class importer {
 		
 		File xmlFile = new File(args[0]);
 		
-		Database db = new Database("/Users/rt/workspaces/cs240/bigone/stowage.db");
+		Database db = new Database("stowage.db");
 		try{
 			Database.initialize();
 		}
@@ -203,7 +203,7 @@ public class importer {
 				field nf = new field(
 						ftit.getTextContent(),
 						0,		
-						pos,	// determined by order in file
+						(pos + 1),	// determined by order in file
 						Integer.parseInt(fw.getTextContent()),
 						Integer.parseInt(fx.getTextContent()),
 						data,

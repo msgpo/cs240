@@ -145,7 +145,7 @@ public class batchDAO extends dao{
 		ResultSet rs = null;
 		try {
 			String query = "select image_url, field_quantity, ";
-			query += "proj_key, owned_by, indexed, from batches ";
+			query += "proj_key, owned_by, indexed from batches ";
 			query += "where id = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setInt(1, bID);
