@@ -81,8 +81,8 @@ public class recordDAO extends dao{
 			query += "id, number from records where ";
 			query += "field_key = ? AND value = ?";
 			stmt = db.getConnection().prepareStatement(query);
-			stmt.setInt(4, f);
-			stmt.setString(5, v);
+			stmt.setInt(1, f);
+			stmt.setString(2, v);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				int bk = rs.getInt(1);

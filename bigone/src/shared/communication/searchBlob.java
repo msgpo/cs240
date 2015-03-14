@@ -15,6 +15,7 @@ public class searchBlob implements Serializable {
 	private int rNum;
 	private int fNum;
 	private boolean failure;
+	private String prefix = "";
 
 	/**
 	 * Constructs a new searchBlob
@@ -47,6 +48,14 @@ public class searchBlob implements Serializable {
 	}
 
 	/**
+	 * set printing prefix
+	 * @param s the string to set
+	 */
+	public void setPrefix(String s){
+		prefix = s;
+	}
+
+	/**
 	 * fetch a string, which contains the results of the search
 	*	@return the string representation
 	*/
@@ -58,13 +67,13 @@ public class searchBlob implements Serializable {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(batchID);
-		sb.append("/n");
-		sb.append(image);
-		sb.append("/n");
+		sb.append("\n");
+		sb.append(prefix + image);
+		sb.append("\n");
 		sb.append(rNum);
-		sb.append("/n");
+		sb.append("\n");
 		sb.append(fNum);
-		sb.append("/n");
+		sb.append("\n");
 		
 		
 		return sb.toString();

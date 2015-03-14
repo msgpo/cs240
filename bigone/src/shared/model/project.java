@@ -144,7 +144,7 @@ public class project implements Serializable {
 			sb.append("\n");
 			sb.append(t.getTitle());
 			sb.append("\n");
-			sb.append(t.getHelp());
+			sb.append(prefix + t.getHelp());
 			sb.append("\n");
 			sb.append(t.getXCoord());
 			sb.append("\n");

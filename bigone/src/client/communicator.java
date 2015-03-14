@@ -75,7 +75,7 @@ public class communicator {
 	public String getSampleImage(userToken t, int id)
 			throws ClientException{
 		Object[] a = {t, id};
-		return (String)doPost("/getSampleImage", a);
+		return getURL() + (String)doPost("/getSampleImage", a);
 	}
 
 	/**
@@ -141,7 +141,11 @@ public class communicator {
 	public ArrayList<searchBlob> search(userToken t, searchProposal sp)
 			throws ClientException{
 		Object[] a = {t, sp};
-		return (ArrayList<searchBlob>)doPost("/search", a);
+		ArrayList<searchBlob> sb = (ArrayList<searchBlob>)doPost("/search", a);
+		for(searchBlob ind : sb){
+			ind.setPrefix(getURL());
+		}
+		return sb;
 	}
 	
 	/**

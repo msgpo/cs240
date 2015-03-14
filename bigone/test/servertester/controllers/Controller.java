@@ -139,7 +139,7 @@ public class Controller implements IController {
 		getView().setRequest(t.toString() + id + "\n");
 		try{
 			String s = comm.getSampleImage(t,id);
-			getView().setResponse(comm.getURL() + s + "\n");
+			getView().setResponse(s + "\n");
 		}
 		catch(Exception  e){
 			getView().setResponse("FAILED\n");
@@ -161,6 +161,25 @@ public class Controller implements IController {
 	}
 	
 	private void getFields() {
+		String[] input = getView().getParameterValues();
+		userToken t = new userToken(input[0], input[1]);
+		fieldList fl;
+		try{
+			if(!(input[2].equals(""))){
+				int id = Integer.parseInt(input[2]);
+				getView().setRequest(t.toString() + id + "\n");
+				fl = comm.getFields(t, id);
+				getView().setResponse(fl.toString());
+			}
+			else{			
+				getView().setRequest(t.toString());
+				fl = comm.getFields(t);
+				getView().setResponse(fl.toString());
+			}
+		}
+		catch(Exception e){
+			getView().setResponse("FAILED\n");
+		}
 	}
 	
 	private void submitBatch() {
@@ -185,6 +204,22 @@ public class Controller implements IController {
 	}
 	
 	private void search() {
+		String[] input = getView().getParameterValues();
+		userToken t = new userToken(input[0], input[1]);
+		searchProposal sp = new searchProposal(input[2], input[3]);
+		getView().setRequest(t.toString() + input[2] + "\n" + input[3] + "\n");
+		try{
+			ArrayList<searchBlob> lsb = comm.search(t, sp);
+			StringBuilder result = new StringBuilder();
+			for(searchBlob sb : lsb){
+				result.append(sb.toString());
+			}
+			getView().setResponse(result.toString());
+		}
+		catch(Exception  e){
+			getView().setResponse("FAILED\n");
+		}
+
 	}
 
 }

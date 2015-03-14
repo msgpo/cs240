@@ -163,6 +163,10 @@ public class facade {
 		}
 		catch(Exception e){
 			db.endTX(false);
+			if(e.getMessage().equals("user has batch already")){
+				bb.setFailed();
+				return bb;
+			}
 			throw new ServerException(e.getMessage(), e);
 		}
 	}
@@ -197,34 +201,34 @@ public class facade {
 				){
 					String recs = bp.getSubmission();
 					ArrayList<record> toAdd = new ArrayList<record>();
-					int row = 1;
-					Scanner record = new Scanner(recs).useDelimiter(";");
-					while(record.hasNext()){
-						int field = 1;
-						String recsSS = record.next();
-						Scanner recordSS = new Scanner(recsSS).useDelimiter(",");
-						while(recordSS.hasNext()){
-							String v = recordSS.next();
-							if(!(v.equals(""))){
+					String[] rows = recs.split(";");
+					if(rows.length != p.getRecordQuantity()){
+						throw new ServerException("bad rows");
+					}
+					for(int row = 0; row < rows.length; row++){
+						int fieldCheck = 0;
+						for(char delimit : rows[row].toCharArray()){
+							if(delimit == ','){
+								fieldCheck++;
+							}
+						} // regexes didn't really work on the empty case
+						if(fieldCheck != (b.getFields() - 1)){
+							System.out.println(fieldCheck + " should be " + b.getFields());
+							throw new ServerException("bad fields");
+						}
+
+						String[] fields = rows[row].split(",");
+						for(int field = 0; field < fields.length; field++){
+							if(!(fields[field].equals(""))){
 								toAdd.add(new record(
 										b.getID(),
-										field,
-										row,
-										v
+										(field + 1),
+										(row + 1),
+										fields[field]
 									)
 								);
 							}
-							field++;
 						}
-						if(field != b.getFields()){
-							// in this case, we have a miswritten batch
-							throw new ServerException("bad fields");
-						}
-						row++;
-					}
-					if(row != p.getRecordQuantity()){
-						// in this case, we have a miswritten batch
-						throw new ServerException("bad rows");
 					}
 					int recsAdded = 0;
 					for(record r : toAdd){
@@ -258,10 +262,10 @@ public class facade {
 					db.getBatchDAO().update(b);
 					db.getUserDAO().update(u);
 
-					db.endTX(true);
-
 					flag = true;
+
 				}
+				db.endTX(true);
 			}
 		}
 		catch(Exception e){

@@ -73,6 +73,27 @@ public class authToken implements Serializable {
 		}
 		return "TRUE\n" + fName + "\n" + lName + "\n" + recs + "\n";
 	}
+
+	/**
+	* test for equality
+	*	@param o the object to compare to
+	*	@return true if same, false if not
+	*/
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+		if(!(o instanceof authToken)){
+			return false;
+		}
+		// shortcut: the toString contains all the fields!
+		authToken c = (authToken) o;
+		if(toString().equals(c.toString())){
+			return true;
+		}
+		return false;
+	}
 	
 
 

@@ -19,6 +19,7 @@ public class fieldList implements Serializable {
 	*/
 	public fieldList(){
 		failure = false;
+		fields = new LinkedList<field>();
 	}
 	
 	/**
@@ -57,11 +58,11 @@ public class fieldList implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		for(field t : fields){
 			sb.append(t.getProject());
-			sb.append("/n");
+			sb.append("\n");
 			sb.append(t.getID());
-			sb.append("/n");
+			sb.append("\n");
 			sb.append(t.getTitle());
-			sb.append("/n");
+			sb.append("\n");
 		}
 		return sb.toString();
 	}

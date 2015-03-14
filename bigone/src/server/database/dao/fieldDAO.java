@@ -128,7 +128,7 @@ public class fieldDAO extends dao{
 		try {
 			String query = "select id ";
 			query += "from fields where ";
-			query += "proj_key = ?, field_number = ?";
+			query += "proj_key = ? and field_number = ?";
 			stmt = db.getConnection().prepareStatement(query);
 			stmt.setInt(1, pKey);
 			stmt.setInt(2, fNum);

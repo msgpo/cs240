@@ -1,0 +1,35 @@
+1
+1
+http://localhost:9090/images/1890_image0.png
+199
+60
+8
+4
+1
+0
+Last Name
+http://localhost:9090/fieldhelp/last_name.html
+60
+300
+http://localhost:9090/knowndata/1890_last_names.txt
+2
+1
+First Name
+http://localhost:9090/fieldhelp/first_name.html
+360
+280
+http://localhost:9090/knowndata/1890_first_names.txt
+3
+2
+Gender
+http://localhost:9090/fieldhelp/gender.html
+640
+205
+http://localhost:9090/knowndata/genders.txt
+4
+3
+Age
+http://localhost:9090/fieldhelp/age.html
+845
+120
+

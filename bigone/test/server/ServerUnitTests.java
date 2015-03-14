@@ -33,6 +33,7 @@ public class ServerUnitTests {
 				"server.batchDAOTest",
 				"server.fieldDAOTest",
 				"server.recordDAOTest",
+				"server.communicatorTest"
 		};
 
 		org.junit.runner.JUnitCore.main(testClasses);

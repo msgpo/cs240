@@ -84,7 +84,7 @@ public class batchBlob implements Serializable {
 		sb.append("\n");
 		sb.append(b.getProject());
 		sb.append("\n");
-		sb.append(b.getImage());
+		sb.append(prefix + b.getImage());
 		sb.append("\n");
 		sb.append(p.getYCoord());
 		sb.append("\n");
