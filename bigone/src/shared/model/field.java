@@ -144,4 +144,13 @@ public class field implements Serializable{
 			(projID == c.getProject())	
 		);
 	}
+
+	/**
+	* comes in handy with Swing stuff, saves us a wrapper
+	* @return string representation
+	*/
+	@Override
+	public String toString(){
+		return name;
+	}
 }
