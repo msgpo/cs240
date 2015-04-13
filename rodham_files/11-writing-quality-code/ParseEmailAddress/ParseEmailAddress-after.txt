@@ -1,0 +1,57 @@
+
+
+private void parse(String address)
+{
+	String[] addr = address.split("@");
+	if (addr.length != 2) throw new IllegalArgumentException();
+
+	localPart = addr[0];
+	if (!isValidLocalPart(localPart)) throw new IllegalArgumentException();
+	
+	domain = addr[1];
+	if (!isValidDomain(domain)) throw new IllegalArgumentException();
+}
+
+
+private boolean isValidLocalPart(String localPart)
+{
+	char[] c = localPart.toCharArray();
+
+	// sanity check local-part
+	if (localPart.length() > 64) return false;
+
+	// verify no .. embedded within
+	if (localPart.contains("..")) return false;
+
+	// verify no leading period
+	if (c[0] == '.') return false;
+
+	// verify no trailing period
+	if (c[localPart.length() - 1] == '.') return false;
+
+	/*
+	 * Uppercase and lowercase letters
+	 * Digits 0 through 9
+	 * Characters ! # $ % * / ? | ^ { } ` ~ & ' + - = _
+	 */
+
+	final String VALID = ".!#$%*/?|^{}`~&'+-=_";
+	for (int i = 0; i < localPart.length(); i++)
+	{
+		if (Character.isLetterOrDigit(c[i])) continue;
+
+		if (VALID.indexOf(c[i]) >= 0) continue;
+
+		return false;
+	}
+	
+	return true;
+}
+
+
+private boolean isValidDomain(String domain)
+{
+	if (domain.length() > 255) return false;
+	
+	return true;
+}

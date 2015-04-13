@@ -1,0 +1,64 @@
+
+
+// WRONG WAY
+
+// This example makes all fields and methods static,
+// just so they can be called from main.
+// This is not the right way to do it.
+
+class ImageEditor {
+
+	static int x;
+	static int y;
+
+	static void doThis() {
+		++x;
+	}
+
+	static void doThat() {
+		++y;
+	}
+
+	public static void main(String[] args) {
+		
+		doThis();
+		doThat();
+	}
+}
+
+
+// RIGHT WAY
+
+// In this example, main creates an object, and then
+// calls a non-static method on it.
+// This allows the fields and methods (except main)
+// to be non-static.
+// This is the right way to do it.
+
+class ImageEditor {
+
+	int x;
+	int y;
+
+	void doThis() {
+		++x;
+	}
+
+	void doThat() {
+		++y;
+	}
+
+	void run() {
+		doThis();
+		doThat();
+	}
+
+	public static void main(String[] args) {
+
+		ImageEditor ie = new ImageEditor();
+		ie.run();
+
+		// OR,
+		// new ImageEditor().run();	
+	}
+}

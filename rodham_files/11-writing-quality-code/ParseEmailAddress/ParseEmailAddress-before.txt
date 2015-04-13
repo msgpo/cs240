@@ -1,0 +1,88 @@
+
+
+private void parse(String address)
+{
+	String[] addr = address.split("@");
+	if (addr.length != 2) throw new IllegalArgumentException();
+	
+	localPart = addr[0];
+	char[] c = localPart.toCharArray();
+	
+	// sanity check local-part
+	if (localPart.length() > 64) throw new IllegalArgumentException();
+
+	// verify no .. embedded within
+	if (localPart.contains("..")) throw new IllegalArgumentException();
+
+	// verify no leading period
+	if (c[0] == '.') throw new IllegalArgumentException();
+
+	// verify no trailing period
+	if (c[localPart.length() - 1] == '.') throw new IllegalArgumentException();
+
+	/*
+	 * Uppercase and lowercase letters
+	 * Digits 0 through 9
+	 * Characters ! # $ % * / ? | ^ { } ` ~ & ' + - = _
+	 */
+	
+	for (int i = 0; i < localPart.length(); i++)
+	{		
+		if ((int) c[i] >= (int) 'A' && (int) c[i] <= (int) 'Z')
+			continue;
+		if ((int) c[i] >= (int) 'a' && (int) c[i] <= (int) 'z')
+			continue;
+		if ((int) c[i] >= (int) '0' && (int) c[i] <= (int) '9')
+			continue;
+		if ((int) c[i] == (int) '.')
+			continue;
+		if ((int) c[i] == (int) '!')
+			continue;
+		if ((int) c[i] == (int) '#')
+			continue;
+		if ((int) c[i] == (int) '$')
+			continue;
+		if ((int) c[i] == (int) '%')
+			continue;
+		if ((int) c[i] == (int) '*')
+			continue;
+		if ((int) c[i] == (int) '/')
+			continue;
+		if ((int) c[i] == (int) '?')
+			continue;
+		if ((int) c[i] == (int) '|')
+			continue;
+		if ((int) c[i] == (int) '^')
+			continue;
+		if ((int) c[i] == (int) '{')
+			continue;
+		if ((int) c[i] == (int) '}')
+			continue;
+		if ((int) c[i] == (int) '`')
+			continue;
+		if ((int) c[i] == (int) '~')
+			continue;
+		if ((int) c[i] == (int) '&')
+			continue;
+		if ((int) c[i] == (int) '\'')
+			continue;
+		if ((int) c[i] == (int) '+')
+			continue;
+		if ((int) c[i] == (int) '-')
+			continue;
+		if ((int) c[i] == (int) '=')
+			continue;
+		if ((int) c[i] == (int) '_')
+			continue;
+		
+		throw new IllegalArgumentException();
+	}
+
+	// handle the domain..
+	domain = addr[1];
+
+	// sanity check domain
+	if (domain.length() > 255) throw new IllegalArgumentException();
+
+}
+

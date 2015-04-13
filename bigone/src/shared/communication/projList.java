@@ -26,6 +26,13 @@ public class projList implements Serializable{
 	public void addProject(project p){
 		proj.add(p);
 	}
+
+	/**
+	* gets the list of projcets
+	*/
+	public ArrayList<project> getProjects(){
+		return proj;
+	}
 	
 	/**
 	*	sets failure flag

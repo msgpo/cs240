@@ -1,0 +1,104 @@
+
+DoubleSpongeBob_3_Scaling_Translation => 
+	DoubleSpongeBob_3_Scaling_Translation_Synch
+
+
+1. Add DrawingListener interface
+
+[DrawingListener.java]
+
+public interface DrawingListener {
+
+	void originChanged(int w_newOriginX, int w_newOriginY);
+}
+
+
+2. Add list of listeners and addDrawingListener method to DrawingComponent
+	
+	private ArrayList<DrawingListener> listeners;
+	
+	public void addDrawingListener(DrawingListener listener) {
+		listeners.add(listener);
+	}
+
+
+3. Add notifyOriginChanged method to DrawingComponent and call it from 
+   mouseDragged
+	
+	private void notifyOriginChanged(int w_newOriginX, int w_newOriginY) {
+		for (DrawingListener listener : listeners) {
+			listener.originChanged(w_newOriginX, w_newOriginY);
+		}
+	}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {		
+			if (dragging) {
+				int d_deltaX = (e.getX() - d_dragStartX);
+				int d_deltaY = (e.getY() - d_dragStartY);
+				
+				int w_deltaX = (int)(d_deltaX / scale);
+				int w_deltaY = (int)(d_deltaY / scale);
+				
+				w_originX = w_dragStartOriginX - w_deltaX;
+				w_originY = w_dragStartOriginY - w_deltaY;
+				
+			*** notifyOriginChanged(w_originX, w_originY);
+				
+				repaint();
+			}
+		}
+
+
+4. Implement two listeners on the Drawing class (one for each window),
+   add addDrawingListener method to DrawingFrame, and
+   add a listener to each frame in Drawing
+			
+		[Drawing]
+			
+		private DrawingListener drawingListener1 = new DrawingListener() {
+
+			@Override
+			public void originChanged(int w_newOriginX, int w_newOriginY) {
+				frame2.setOrigin(w_newOriginX, w_newOriginY);	
+			}			
+		};
+			
+		private DrawingListener drawingListener2 = new DrawingListener() {
+
+			@Override
+			public void originChanged(int w_newOriginX, int w_newOriginY) {
+				frame1.setOrigin(w_newOriginX, w_newOriginY);	
+			}			
+		};
+
+				[Drawing.run]
+				
+				frame1.addDrawingListener(drawingListener1);
+				frame2.addDrawingListener(drawingListener2);
+	
+	[DrawingFrame]
+	
+	public void addDrawingListener(DrawingListener listener) {
+		component.addDrawingListener(listener);
+	}
+
+
+5. Add setOrigin methods to DrawingComponent and DrawingFrame
+
+	[DrawingComponent]
+		
+	public void setOrigin(int w_newOriginX, int w_newOriginY) {
+		w_originX = w_newOriginX;
+		w_originY = w_newOriginY;
+		this.repaint();
+	}
+	
+	[DrawingFrame]
+	
+	public void setOrigin(int w_newOriginX, int w_newOriginY) {
+		component.setOrigin(w_newOriginX, w_newOriginY);
+	}
+
+
+

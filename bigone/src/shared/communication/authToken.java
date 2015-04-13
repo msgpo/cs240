@@ -75,6 +75,21 @@ public class authToken implements Serializable {
 	}
 
 	/**
+	* for indexer login window: get welcome message
+	* @return the message
+	*/
+	public String getMessage(){
+		return ("Welcome, " +
+			fName +
+			" " +
+			lName +
+			".\n" +
+			"You have indexed " +
+			recs +
+			" records.");
+	}
+
+	/**
 	* test for equality
 	*	@param o the object to compare to
 	*	@return true if same, false if not

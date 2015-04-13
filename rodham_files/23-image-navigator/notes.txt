@@ -1,0 +1,99 @@
+
+
+Review
+
+
+Double Sponge Bob demo
+
+
+If we have some shapes whose locations and sizes are 
+defined in a flipped Cartesian coordinate system,
+
+
+How do we translate the shapes?  [ADD DELTA_X, DELTA_Y)]
+
+	Point TransformPoint(Point pt) {
+		double newX = pt.X + DELTA_X;
+		double newY = pt.Y + DELTA_Y;
+		return new Point(newX, newY);
+	}
+
+How do we scale the shapes?  [MULTIPLY by a scaling factor]
+
+	Point TransformPoint(Point pt) {
+		double newX = pt.X * SCALE;
+		double newY = pt.Y * SCALE;
+		return new Point(newX, newY);
+	}
+	
+
+	- Notice that when you scale the location of a shape, 
+	  it moves closer to or farther away from the origin
+
+	- Except for the origin itself, which stays at the 
+	  same place: scale * (0, 0) = (0, 0)
+	  (the origin is invariant under scaling)
+
+	- For this reason, when we scale shapes, they are scaled
+	  "relative to the origin", meaning that the origin stays
+	  fixed
+
+	- What if we wanted to scale relative to some point other 
+	  than the origin (e.g., 50, 100)?
+
+		1. Before scaling the shapes, subtract (50, 100) 
+		   from every point's coordinates
+		2. Do the scaling by multiplying every point
+		3. Add (50, 100) to every point
+
+
+	Point TransformPoint(Point pt) {
+		double newX = pt.X;
+		double newY = pt.Y;
+
+		newX -= 50;
+		newY -= 100;
+
+		newX *= SCALE;
+		newY *= SCALE;
+
+		newX += 50;
+		newY += 100;
+
+		return new Point(newX, newY);
+	}
+
+	GENERALIZE
+
+	Point TransformPoint(Point pt, Point fixed) {
+		double newX = pt.X;
+		double newY = pt.Y;
+
+		newX -= fixed.x
+		newY -= fixed.Y;
+
+		newX *= SCALE;
+		newY *= SCALE;
+
+		newX += fixed.X;
+		newY += fixed.Y;
+
+		return new Point(newX, newY);
+	}
+
+
+The untransformed (untranslated, unscaled) coordinates are 
+called "world coordinates"
+
+The transformed coordinates are called "device coordinates", 
+because they are the coordinates of the points when they are drawn on the device.
+
+
+REVIEW DOUBLE SPONGE BOB CODE (NO TRANSFORMS)
+
+Add Scaling
+
+Add Translation
+
+Add Synch
+

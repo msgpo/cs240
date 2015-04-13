@@ -1,0 +1,132 @@
+
+DoubleSpongeBob_1_NoTransforms => DoubleSpongeBob_2_Scaling
+
+
+1. Add scale field to DrawingComponent and initialize to 1.0 in constructor
+	
+	private double scale;
+
+		scale = 1.0;
+
+
+2. Add setScale method to DrawingComponent 
+	
+	public void setScale(double newScale) {
+		scale = newScale;
+		this.repaint();
+	}
+
+
+3. Add slider change listener to DrawingFrame
+	
+	private ChangeListener sliderChangeListener = new ChangeListener() {
+		
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			component.setScale(slider.getValue() * 0.05);
+		}
+	};
+
+
+4. Add methods to DrawingComponent for converting between world and device
+   coordinates (in both directions)
+	
+	private int worldToDeviceX(int w_X) {
+		double d_X = w_X;
+		d_X *= scale;
+		return (int)d_X;
+	}
+	
+	private int worldToDeviceY(int w_Y) {
+		double d_Y = w_Y;
+		d_Y *= scale;
+		return (int)d_Y;
+	}
+	
+	private int deviceToWorldX(int d_X) {
+		double w_X = d_X;
+		w_X *= 1.0 / scale;
+		return (int)w_X;
+	}
+	
+	private int deviceToWorldY(int d_Y) {
+		double w_Y = d_Y;
+		w_Y *= 1.0 / scale;
+		return (int)w_Y;
+	}
+
+
+5. Update draw methods on all DrawingShape sub-classes to handle scale
+
+	
+	class DrawingRect implements DrawingShape {
+	
+		@Override
+		public void draw(Graphics2D g2) {
+			Rectangle2D transformedRect = 
+				new Rectangle2D.Double(worldToDeviceX((int)rect.getX()),
+										worldToDeviceY((int)rect.getY()),
+										(int)(rect.getWidth() * scale),
+										(int)(rect.getHeight() * scale));
+			g2.setColor(color);
+			g2.fill(transformedRect);
+		}
+	}
+	
+	
+	class DrawingLine implements DrawingShape {
+
+		@Override
+		public void draw(Graphics2D g2) {
+			g2.setColor(color);
+
+			Stroke transformedStroke = 
+				new BasicStroke((float)(scale * stroke.getLineWidth()));
+			g2.setStroke(transformedStroke);
+			
+			Line2D transformedLine = 
+				new Line2D.Double(worldToDeviceX((int)line.getX1()),
+									worldToDeviceY((int)line.getY1()),
+									worldToDeviceX((int)line.getX2()),
+									worldToDeviceY((int)line.getY2()));
+			g2.draw(transformedLine);
+		}	
+	}
+	
+	
+	class DrawingImage implements DrawingShape {
+	
+		@Override
+		public void draw(Graphics2D g2) {
+			Rectangle2D transformedRect = 
+				new Rectangle2D.Double(worldToDeviceX((int)rect.getX()),
+										worldToDeviceY((int)rect.getY()),
+										(int)(rect.getWidth() * scale),
+										(int)(rect.getHeight() * scale));
+			
+			g2.drawImage(image, (int)transformedRect.getMinX(), 
+							(int)transformedRect.getMinY(), 
+							(int)transformedRect.getMaxX(), 
+							(int)transformedRect.getMaxY(),
+							0, 0, image.getWidth(null), 
+							image.getHeight(null), null);
+		}	
+	}
+	
+	
+	class DrawingText implements DrawingShape {
+	
+		@Override
+		public void draw(Graphics2D g2) {
+			g2.setColor(color);
+			
+			Font transformedFont = 
+				font.deriveFont((float)(scale * font.getSize()));
+			g2.setFont(transformedFont);
+			
+			g2.drawString(text, worldToDeviceX((int)location.getX()), 
+								worldToDeviceY((int)location.getY()));
+		}
+	}
+
+

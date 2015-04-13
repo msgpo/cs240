@@ -1,0 +1,9 @@
+
+
+drop table member;
+drop table book;
+drop table reading;
+drop table category;
+drop table category_book;
+
+

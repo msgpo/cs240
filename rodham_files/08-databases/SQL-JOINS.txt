@@ -1,0 +1,106 @@
+
+
+
+EXPLICIT INNER JOIN
+-------------------
+
+
+SELECT *
+FROM employee INNER JOIN department ON employee.DepartmentID = department.DepartmentID;
+
+
+(Omits employees with no department, and departments with no employees)
+
+
+
+
+
+
+IMPLICIT INNER JOIN (cross join with where-clause filter)
+---------------------------------------------------------
+
+
+SELECT *
+FROM employee, department
+WHERE employee.DepartmentID = department.DepartmentID;
+
+
+(Omits employees with no department, and departments with no employees)
+
+
+
+
+
+
+LEFT OUTER JOIN
+---------------
+
+
+SELECT *
+FROM employee
+LEFT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
+
+
+(Includes employees with no department)
+
+
+
+
+
+
+RIGHT OUTER JOIN
+----------------
+
+
+SELECT *
+FROM employee
+RIGHT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
+
+
+(Includes departments with no employees)
+
+
+
+
+
+
+
+FULL OUTER JOIN
+---------------
+
+
+FROM employee
+FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
+
+
+(Includes employees with no department, and departments with no employees)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

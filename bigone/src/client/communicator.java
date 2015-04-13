@@ -158,8 +158,9 @@ public class communicator {
 		
 		Object res;
 		
-		try{
-			URL url = new URL(urlBase + loc);
+		try{	
+			String temp = urlBase + "/" + loc;
+			URL url = new URL(temp);
 			HttpURLConnection connection =
 					(HttpURLConnection)url.openConnection();
 			connection.setRequestMethod("GET");
@@ -176,7 +177,7 @@ public class communicator {
 			}
 		}
 		catch(IOException e){
-			throw new ClientException(String.format("DL failure: $s",
+			throw new ClientException(String.format("DL failure: %s",
 					e.getMessage()), e);
 		}
 		

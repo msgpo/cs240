@@ -1,0 +1,124 @@
+
+DoubleSpongeBob_2_Scaling => DoubleSpongeBob_3_Scaling_Translation
+
+
+1. Add fields to DrawingComponent for tracking the current origin (in world
+   coordinates), and initialize them to (0,0) in the constructor
+
+	private int w_originX;
+	private int w_originY;
+
+		w_originX = 0;
+		w_originY = 0;
+
+
+2. Modify methods that convert between world and device coordinates to handle
+   translation
+
+	private int worldToDeviceX(int w_X) {
+		double d_X = w_X;
+		d_X -= w_originX;
+		d_X *= scale;
+		return (int)d_X;
+	}
+	
+	private int worldToDeviceY(int w_Y) {
+		double d_Y = w_Y;
+		d_Y -= w_originY;
+		d_Y *= scale;
+		return (int)d_Y;
+	}
+	
+	private int deviceToWorldX(int d_X) {
+		double w_X = d_X;
+		w_X *= 1.0 / scale;
+		w_X += w_originX;
+		return (int)w_X;
+	}
+	
+	private int deviceToWorldY(int d_Y) {
+		double w_Y = d_Y;
+		w_Y *= 1.0 / scale;
+		w_Y += w_originY;
+		return (int)w_Y;
+	}
+	
+
+3. Add fields and methods for implementing mouse-based translation of shapes
+   (deltas in device coordinates must be scaled to compute equivalent deltas
+   in world coordinates)
+	
+	private boolean dragging;
+	private int d_dragStartX;
+	private int d_dragStartY;
+	private int w_dragStartOriginX;
+	private int w_dragStartOriginY;
+		
+
+		initDrag();
+
+	
+	private void initDrag() {
+		dragging = false;
+		d_dragStartX = 0;
+		d_dragStartY = 0;
+		w_dragStartOriginX = 0;
+		w_dragStartOriginY = 0;
+	}
+
+	
+	private MouseAdapter mouseAdapter = new MouseAdapter() {
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			int d_X = e.getX();
+			int d_Y = e.getY();
+			int w_X = deviceToWorldX(d_X);
+			int w_Y = deviceToWorldY(d_Y);
+			
+			boolean hitShape = false;
+			
+			Graphics2D g2 = (Graphics2D)getGraphics();
+			for (DrawingShape shape : shapes) {
+				if (shape.contains(g2, w_X, w_Y)) {
+					hitShape = true;
+					break;
+				}
+			}
+			
+			if (hitShape) {
+				dragging = true;		
+				d_dragStartX = e.getX();
+				d_dragStartY = e.getY();		
+				w_dragStartOriginX = w_originX;
+				w_dragStartOriginY = w_originY;
+			}
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {		
+			if (dragging) {
+				int d_deltaX = (e.getX() - d_dragStartX);
+				int d_deltaY = (e.getY() - d_dragStartY);
+				
+				int w_deltaX = (int)(d_deltaX / scale);
+				int w_deltaY = (int)(d_deltaY / scale);
+				
+				w_originX = w_dragStartOriginX - w_deltaX;
+				w_originY = w_dragStartOriginY - w_deltaY;
+				
+				repaint();
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			initDrag();
+		}
+
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			return;
+		}	
+	};
+

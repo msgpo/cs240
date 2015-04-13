@@ -1,0 +1,43 @@
+
+
+// Compute Net Pay
+totalWithholdings = 0;
+
+for ( id = 0; id < numEmployees; ++id) {
+
+	// compute social security withholding, if below the maximum
+	if ( m_employee[ id ].governmentRetirementWithheld < MAX_GOVT_RETIREMENT) {
+		governmentRetirement = ComputeGovernmentRetirement( m_employee[ id ] );
+	}
+
+	// set default to no retirement contribution
+	companyRetirement = 0;
+
+	// determine discretionary employee retirement contribution
+	if ( m_employee[ id ].WantsRetirement &&
+		EligibleForRetirement( m_employee[ id ] ) ) {
+		companyRetirement = GetRetirement( m_employee[ id ] );
+	}
+
+	grossPay = ComputeGrossPay( m_employee[ id ] );
+
+	// determine IRA contribution
+	personalRetirement = 0;
+	if (EligibleForPersonalRetirement( m_employee[ id ] ) {
+		personalRetirement = PersonalRetirementContribution( m_employee[ id ],
+								companyRetirement, grossPay );
+	}
+
+	// make weekly paycheck
+	withholding = ComputeWithholding( m_employee[ id ] );
+	netPay = grossPay - withholding - companyRetirement - governmentRetirement -
+				personalRetirement;
+	PayEmployee( m_employee[ id ], netPay );
+
+	// add this employee's paycheck to total for accounting
+	totalWithholdings += withholding;
+	totalGovernmentRetirement += governmentRetirement;
+	totalRetirement += companyRetirement; 
+}
+
+SavePayRecords( totalWithholdings, totalGovernmentRetirement, totalRetirement );

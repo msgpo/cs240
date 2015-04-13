@@ -26,6 +26,9 @@ public class fileHandler implements HttpHandler {
 			BufferedInputStream is = new BufferedInputStream(new FileInputStream(loc));
 			BufferedOutputStream os = 
 					new BufferedOutputStream(exchange.getResponseBody());
+		//	exchange.getResponseHeaders().add(
+			//		"Content-type", "image/png");
+					// could revise this for other types
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 			int b_y_t_e;
 			while((b_y_t_e = is.read()) != -1){

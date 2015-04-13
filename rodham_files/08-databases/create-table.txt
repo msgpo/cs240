@@ -1,0 +1,41 @@
+
+
+create table member
+(
+	id integer not null primary key autoincrement,
+	name varchar(255) not null,
+	email_address varchar(255) not null
+);
+
+
+create table book
+(
+	id integer not null primary key autoincrement,
+	title varchar(255) not null,
+	author varchar(255) not null,
+	genre varchar(32) not null,
+	constraint ck_genre check (genre in ('Unspecified', 'Fiction', 'NonFiction', 'HistoricalFiction')) 
+);
+
+
+create table reading
+(
+	member_id int not null,
+	book_id int not null
+);
+
+
+create table category
+(
+	id integer not null primary key autoincrement,
+	name varchar(255) not null,
+	parent_id int
+);
+
+
+create table category_book
+(
+	category_id int not null,
+	book_id int not null
+);
+

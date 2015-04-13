@@ -1,0 +1,21 @@
+
+SPELLING CHECKER DATA STRUCTURE DESCRIPTIONS
+--------------------------------------------
+
+The dictionary is a set of words.
+It will be searched once for each word in the document,
+so the search operation must be very fast.
+My program will store the dictionary words in a hash table.
+This is a good choice because hash tables provide very fast
+searching, and there is no need to store the dictionary words
+in sorted order.
+
+The error report is a map that associates each misspelled word 
+with a list of line numbers where the word appears in the document.
+The spelling checker will search the error report once for
+each word in the document, so searching the error report for a 
+particular word must be very fast.
+It is also necessary to store the misspelled words in sorted order.
+My program will store the error report in a balanced binary search
+tree, which will provide both sorting and efficient searching.
+
