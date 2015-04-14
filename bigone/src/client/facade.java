@@ -4,6 +4,7 @@ import shared.communication.*;
 import shared.model.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
@@ -12,12 +13,14 @@ import java.net.*;
 import javax.imageio.ImageIO;
 
 public class facade{
+
 	
 	static communicator comm;
 	static String address;
 	static int port;
 	static private userToken uToken;
 	static BatchState bs;
+	static ArrayList<FacadeListener> flisteners;
 
 	/*
 	* initializes your facade
@@ -30,6 +33,7 @@ public class facade{
 		System.out.println("Server address: " + address);
 		System.out.println("Server port:    " + port);
 		comm = new communicator(srv, p);
+		flisteners = new ArrayList<FacadeListener>();
 
 	}
 	
@@ -56,15 +60,24 @@ public class facade{
 		try{
 			File storedState = new File("local/" + un);
 			if(storedState.exists()){
+				System.out.println("Restoring: " + "local/" + un);
 				ObjectInputStream is = 
 					new ObjectInputStream(
-					new BufferedInputStream(
-					new FileInputStream(storedState)));
+					new FileInputStream(storedState));
+				System.out.println("Restoring object...");
 				bs = (BatchState) is.readObject();
+				System.out.println("Getting image URL");
+				URL url = new URL(comm.getURL() + bs.getURL());
+				System.out.println("getting image from: " + bs.getURL());
+				bs.setImg(ImageIO.read(url));
+
+				fireNewBatch(bs);
+
 			}
 		}
 		catch(Exception e){
-			// don't worry about it yo
+			System.out.println("Problem with restore: " + e.getMessage());
+			System.out.println(e);
 		}
 
 		return aToken;
@@ -130,10 +143,35 @@ public class facade{
 		}
 		// elsewise we know we can make a new state
 		// build batch state
-		fieldList fl = comm.getFields(uToken, id);
-		
-		bs = new BatchState(uToken.getUsername());
-		
+		try{
+			fieldList fl = comm.getFields(uToken, id);
+			batch b = bb.getBatch();
+			projList pl = comm.getProjects(uToken);
+			project p = null;
+			for(project t : pl.getProjects()){
+				if(t.getID() == id){
+					p = t;
+				}
+			}			
+			bs = new BatchState(uToken.getUsername());
+			// set up all the batch stats: coords etc.
+			bs.fields = fl.getFields();
+			bs.firsty = p.getYCoord();
+			bs.fieldHeight = p.getHeight();
+			bs.rows = p.getRecordQuantity();
+			bs.firstx = bs.fields.getFirst().getXCoord();
+
+			
+			URL url = new URL(comm.getURL() + b.getImage());
+			BufferedImage img = ImageIO.read(url);
+			bs.setImg(img);
+			bs.setURL(b.getImage());
+			System.out.println("set image to: " + bs.getURL());
+			fireNewBatch(bs);
+		}
+		catch(Exception e){
+			throw new ClientException("problem making batch: ", e);
+		}
 	}
 
 	/*
@@ -141,19 +179,31 @@ public class facade{
 	*/
 	public static void save(){
 		try{
-			String destLocation = "local/" + bs.getUser();
+			File destLocation = new File("local/" + bs.getUser());
 			ObjectOutputStream os = 
-				new ObjectOutputStream(
-				new BufferedOutputStream(
+				new ObjectOutputStream(		
 				new FileOutputStream(
-				destLocation)));
+				destLocation));
 			os.writeObject(bs);
 		}
 		catch(Exception e){
-			// don't sweat it
+			System.out.println("Problem saving batch" + e.getMessage());
 		}
 	}
 		
-
-		
+	public static void addFacadeListener(FacadeListener fl){
+		flisteners.add(fl);
+	}
+	protected static void fireImage(BufferedImage i){
+		for(FacadeListener t : flisteners){
+			t.imageChanged(i);
+		}
+	}
+	protected static void fireNewBatch(BatchState bState){
+		for(FacadeListener t : flisteners){
+			t.newBatch(bState);
+		}
+	}
 }
+
+

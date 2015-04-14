@@ -2,13 +2,16 @@ package client;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
 import shared.model.*;
 
 public class BigWindow extends JFrame
-		implements ActionListener{
+		implements ActionListener,
+			FacadeListener,
+			IndexingListener{
 
 	EventListenerList actionListeners = new EventListenerList();
 	ImagePanel imgPanel;
@@ -16,32 +19,61 @@ public class BigWindow extends JFrame
 	MenuPanel menu;
 	EntryPanel entry;
 	InfoPanel info;
+	BatchState bState;
 
 	/*
 	* creates a BigWindow
 	*/
 	public BigWindow(){
-		imgPanel = new ImagePanel();
+		
+		// reset to plain BatchState
+		bState = new BatchState("");
+
+		imgPanel = new ImagePanel(this);
+	//	imgPanel.setMinimumSize(new Dimension(1000,0));
+	//	imgPanel.setResizeWeight(1.0);
 		buttons = new ButtonBar(this);
 		menu = new MenuPanel(this);
 		entry = new EntryPanel();
-		info = new InfoPanel();
+		info = new InfoPanel(this, imgPanel);
 
 		this.setTitle("Indexing by RT Hatfield :: Spring 2015");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
-		this.add(menu);
-		this.add(buttons);
+
+		JPanel controls = new JPanel();
+		controls.setLayout(new BoxLayout(controls, BoxLayout.PAGE_AXIS));
+		controls.add(menu);
+		controls.add(buttons);
+		controls.setMinimumSize(new Dimension(1024, 64));
+		controls.setMaximumSize(new Dimension(1480, 64));
+		this.add(controls);
+		this.add(Box.createRigidArea(new Dimension(0,10)));
 		
+		JPanel dataPanel = new JPanel();
+		JSplitPane dataPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				entry, info);
+		dataPane.setMaximumSize(new Dimension(1480,512));
+		dataPane.setMinimumSize(new Dimension(1000,264));
+		dataPane.setPreferredSize(new Dimension(1000,264));
+		dataPanel.add(dataPane);
+
+		JPanel indexingPanel = new JPanel();
 		JSplitPane indexingPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				imgPanel, info);
+				imgPanel, dataPanel);
 		//indexingPane.setDividerLocation(430);
-		this.add(indexingPane);
+		indexingPanel.add(indexingPane);
+		indexingPanel.setMinimumSize(new Dimension(1000,900));
+		indexingPanel.setPreferredSize(new Dimension(1000,1024));
+		indexingPanel.setMaximumSize(new Dimension(1464,1000));
+		this.add(indexingPanel);
+		this.add(Box.createRigidArea(new Dimension(0,10)));
+		this.setMinimumSize(new Dimension(1024, 1100));
 		this.pack();
 
 	}
 	
-	
+	// methods for having and being ActionListener
 	/*
 	* set up an ActionListener, for toggling visibility
 	* @param a a listener
@@ -73,7 +105,7 @@ public class BigWindow extends JFrame
 	}
 
 	/*
-	*  action handler
+	*  action handler for ActionListener
 	* @param e an ActionEvent to deal with
 	*/
 	public void actionPerformed(ActionEvent e){
@@ -83,7 +115,9 @@ public class BigWindow extends JFrame
 			System.exit(0);		
 		}
 		if(e.getActionCommand().equals("logout")){
-			// save batch etc. (TODO)
+			// clear everything
+			imgPanel.clear();
+			// this batchstate will never actually be seen
 			// then show login
 			fire(new ActionEvent(this, ActionEvent.ACTION_PERFORMED,
 					"show login"));
@@ -94,10 +128,83 @@ public class BigWindow extends JFrame
 			new BatchDialog(projects);
 		}
 		if(e.getActionCommand().equals("save")){
+			Point origin = this.getLocationOnScreen();
+			bState.windowX = (int) origin.getX();
+			bState.windowY = (int) origin.getY();
+			bState.windowW = this.getWidth();
+			bState.windowH = this.getHeight();
+			bState.hsplit = indexingPane.getDividerLocation();
+			bState.vsplit = dataPane.getDividerLocation();
 			facade.save();
+		}
+		if(e.getActionCommand().equals("zin")){
+			// zoom in
+			imgPanel.zoomIn();
+		}
+		if(e.getActionCommand().equals("zout")){
+			// zoom out
+			imgPanel.zoomOut();	
+		}
+		if(e.getActionCommand().equals("invert")){
+			// toggle inversion
+			imgPanel.toggleInversion();
+			bState.invert = !bState.invert;
+		}
+		if(e.getActionCommand().equals("highlight")){
+			// toggle highlight
+			if(bState.highlight){
+				bState.highlight = false;
+				imgPanel.clearGrid();
+			}
+			else {	
+				// MUST be if - else to prevent accidental
+				// fall-thru
+				bState.highlight = true;
+				imgPanel.highlight(bState.rows,
+				bState.firstx, bState.firsty,
+				bState.fieldHeight, bState.fields);
+			}
+		}
+
+
+	}
+	
+	//methods for FacadeListener
+	public void imageChanged(BufferedImage i){
+		imgPanel.setImage(i);
+	}
+	public void newBatch(BatchState bs){
+		// extract info from BS and set up
+		// the window etc.
+		bState = bs;
+		this.setLocation(bs.windowX, bs.windowY);
+		this.setSize(bs.windowW, bs.windowH);
+		indexingPane.setDividerLocation(bs.hsplit);
+		dataPane.setDividerLocation(bs.vsplit);
+		imgPanel.setImage(bs.getImg());
+		imgPanel.setZoom(bs.zoom);
+		imgPanel.setPos(bState.offsetX, bState.offsetY);
+		if(bs.invert){
+			imgPanel.toggleInversion();
+		}
+		if(bs.highlight){
+			imgPanel.highlight(bs.rows,
+			bs.firstx, bs.firsty,
+			bs.fieldHeight, bs.fields);
 		}
 
 	}
 
+	//methods for IndexingListener
+	public void zoomChanged(double z){
+		bState.zoom = z;
+	}
+	public void scrollChanged(int x, int y){
+		bState.offsetX = x;
+		bState.offsetY = y;
+	}
+
 
 }
+
+

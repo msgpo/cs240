@@ -19,6 +19,7 @@ public class MenuPanel extends JMenuBar {
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.add(menu);
 		this.add(Box.createHorizontalGlue());
+		this.setMinimumSize(new Dimension(1024, 24));
 
 		// items in menu:
 		JMenuItem downBatch = new JMenuItem("Download Batch");
@@ -32,7 +33,6 @@ public class MenuPanel extends JMenuBar {
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(al);
 		exit.setActionCommand("exit");
-
 		menu.add(exit);
 	}
 

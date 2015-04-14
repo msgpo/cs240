@@ -29,6 +29,14 @@ public class fieldList implements Serializable {
 	public void addField(field f){
 		fields.add(f);
 	}
+
+	/**
+	* get list of fields
+	* @return list of fields
+	*/
+	public LinkedList<field> getFields(){
+		return fields;
+	}
 	
 	/**
 	*	sets failure flag

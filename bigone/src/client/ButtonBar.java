@@ -18,9 +18,17 @@ public class ButtonBar extends JPanel{
 	 	this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
 		zIn = new JButton("Zoom In");
+		zIn.setActionCommand("zin");
+		zIn.addActionListener(al);
 		zOut = new JButton("Zoom Out");
+		zOut.setActionCommand("zout");
+		zOut.addActionListener(al);
 		invert = new JButton("Invert Image");
+		invert.setActionCommand("invert");
+		invert.addActionListener(al);
 		hilite = new JButton("Toggle Highlights");
+		hilite.setActionCommand("highlight");
+		hilite.addActionListener(al);
 		save = new JButton("Save");
 		save.setActionCommand("save");
 		save.addActionListener(al);

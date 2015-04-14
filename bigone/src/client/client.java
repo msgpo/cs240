@@ -44,6 +44,7 @@ public class client  {
 				// display this window until login complete, 
 				// then switch to mainWindow;
 				mainWindow = new BigWindow();
+				facade.addFacadeListener(mainWindow);
 				mainWindow.addActionListener(this);
 				loginWindow.setVisible(true);		
 			}
