@@ -33,6 +33,8 @@ public class ButtonBar extends JPanel{
 		save.setActionCommand("save");
 		save.addActionListener(al);
 		submit = new JButton("Submit");
+		submit.setActionCommand("submit");
+		submit.addActionListener(al);
 
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.add(zIn);

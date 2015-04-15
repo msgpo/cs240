@@ -19,6 +19,10 @@ public class BigWindow extends JFrame
 	MenuPanel menu;
 	EntryPanel entry;
 	InfoPanel info;
+
+	JSplitPane indexingPane;
+	JSplitPane dataPane;
+
 	BatchState bState;
 
 	/*
@@ -34,8 +38,8 @@ public class BigWindow extends JFrame
 	//	imgPanel.setResizeWeight(1.0);
 		buttons = new ButtonBar(this);
 		menu = new MenuPanel(this);
-		entry = new EntryPanel();
-		info = new InfoPanel(this, imgPanel);
+		entry = new EntryPanel(bState);
+		info = new InfoPanel(this);
 
 		this.setTitle("Indexing by RT Hatfield :: Spring 2015");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,18 +54,18 @@ public class BigWindow extends JFrame
 		this.add(controls);
 		this.add(Box.createRigidArea(new Dimension(0,10)));
 		
-		JPanel dataPanel = new JPanel();
-		JSplitPane dataPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+		dataPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				entry, info);
+		dataPane.setResizeWeight(0.5);
+		dataPane.setDividerLocation(0.5);
 		dataPane.setMaximumSize(new Dimension(1480,512));
 		dataPane.setMinimumSize(new Dimension(1000,264));
 		dataPane.setPreferredSize(new Dimension(1000,264));
-		dataPanel.add(dataPane);
 
 		JPanel indexingPanel = new JPanel();
-		JSplitPane indexingPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				imgPanel, dataPanel);
-		//indexingPane.setDividerLocation(430);
+		indexingPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+				imgPanel, dataPane);
+		indexingPane.setResizeWeight(0.6);
 		indexingPanel.add(indexingPane);
 		indexingPanel.setMinimumSize(new Dimension(1000,900));
 		indexingPanel.setPreferredSize(new Dimension(1000,1024));
@@ -165,6 +169,20 @@ public class BigWindow extends JFrame
 				bState.fieldHeight, bState.fields);
 			}
 		}
+		if(e.getActionCommand().equals("submit")){
+			// submit batch.
+			try{
+				facade.submit();
+			}
+			catch(Exception ex){
+				JOptionPane.showMessageDialog(this,
+						"Can't submit batch\n" +
+						ex.getMessage(),
+						"Problem!",
+						JOptionPane.ERROR_MESSAGE);
+			}
+				
+		}
 
 
 	}
@@ -177,10 +195,12 @@ public class BigWindow extends JFrame
 		// extract info from BS and set up
 		// the window etc.
 		bState = bs;
+		// window setup
 		this.setLocation(bs.windowX, bs.windowY);
 		this.setSize(bs.windowW, bs.windowH);
 		indexingPane.setDividerLocation(bs.hsplit);
 		dataPane.setDividerLocation(bs.vsplit);
+		// image setup
 		imgPanel.setImage(bs.getImg());
 		imgPanel.setZoom(bs.zoom);
 		imgPanel.setPos(bState.offsetX, bState.offsetY);
@@ -192,7 +212,8 @@ public class BigWindow extends JFrame
 			bs.firstx, bs.firsty,
 			bs.fieldHeight, bs.fields);
 		}
-
+		// indexing setup
+		entry.init(bs);
 	}
 
 	//methods for IndexingListener

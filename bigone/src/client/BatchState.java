@@ -37,6 +37,7 @@ public class BatchState implements Serializable {
 	public int hsplit;
 	public int vsplit;
 	// batch characteristics
+	public int batchID;
 	public LinkedList<field> fields;
 	public int rows; // number of records
 	public int firstx;
@@ -47,6 +48,8 @@ public class BatchState implements Serializable {
 	public String imgURL;
 	public transient BufferedImage img;
 	
+	// where the magic happens
+	public ArrayList<record> records;
 	
 	/*
 	* set up a BatchState belonging to a user
@@ -60,6 +63,7 @@ public class BatchState implements Serializable {
 		invert = false;
 		highlight = false;
 		img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		batchID = 0;
 		fields = new LinkedList<field>();
 		rows = 0;
 		firstx = 0;
@@ -71,6 +75,7 @@ public class BatchState implements Serializable {
 		windowH = 0;
 		hsplit = -1;
 		vsplit = -1;
+		records = new ArrayList<record>();
 	}
 	
 	/*

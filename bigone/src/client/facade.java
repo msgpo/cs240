@@ -139,6 +139,7 @@ public class facade{
 		// do stuff to set up batch
 		batchBlob bb = comm.downloadBatch(uToken, id);
 		if(bb.failure()){
+			System.out.println("problem getting batch");
 			throw new ClientException("Failed getting batch");
 		}
 		// elsewise we know we can make a new state
@@ -155,12 +156,21 @@ public class facade{
 			}			
 			bs = new BatchState(uToken.getUsername());
 			// set up all the batch stats: coords etc.
+			bs.batchID = b.getID();
 			bs.fields = fl.getFields();
 			bs.firsty = p.getYCoord();
 			bs.fieldHeight = p.getHeight();
 			bs.rows = p.getRecordQuantity();
 			bs.firstx = bs.fields.getFirst().getXCoord();
 
+			for(int rNum = 1; rNum <= bs.rows; rNum++){
+				for(field f : bs.fields){
+					record rec = new record(bs.batchID,
+								rNum,
+								f.getNumber(),
+								"");
+				}
+			}
 			
 			URL url = new URL(comm.getURL() + b.getImage());
 			BufferedImage img = ImageIO.read(url);
@@ -170,6 +180,7 @@ public class facade{
 			fireNewBatch(bs);
 		}
 		catch(Exception e){
+			e.printStackTrace();
 			throw new ClientException("problem making batch: ", e);
 		}
 	}
@@ -190,6 +201,40 @@ public class facade{
 			System.out.println("Problem saving batch" + e.getMessage());
 		}
 	}
+
+	public static void submit()
+			throws ClientException{
+		try{
+			StringBuilder submission = new StringBuilder();
+			for(int row = 1; row <= bs.rows; row++){
+				for(int col = 1; col < bs.fields.size(); col++){
+					for(record r : bs.records){
+						if(r.getNumber() == row && r.getFieldNumber() == col){
+							submission.append(r.getValue());
+						}
+						submission.append(",");
+					}
+				}
+				submission.append(";");
+			}
+			String sub = submission.substring(0, submission.length()-1);
+			batchProposal bp = new batchProposal(bs.batchID, sub);
+			if(!comm.submitBatch(uToken, bp)){
+				throw new ClientException("can't submit");
+			}
+			bs = new BatchState(uToken.getUsername());
+			File storedState = new File("local/" + uToken.getUsername());
+			if(storedState.exists()){
+				storedState.delete();
+			}
+			fireNewBatch(bs);
+
+		}
+		catch(Exception e){
+			throw new ClientException("can't submit", e);
+		}
+	}
+			
 		
 	public static void addFacadeListener(FacadeListener fl){
 		flisteners.add(fl);

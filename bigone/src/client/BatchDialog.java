@@ -114,6 +114,7 @@ public class BatchDialog extends JDialog
 				this.setVisible(false);
 			}
 			catch(Exception ex){
+				System.out.println(ex);
 				JOptionPane.showMessageDialog(this,
 						"No batch for you!",
 						"Problem!",

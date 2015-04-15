@@ -13,8 +13,8 @@ public class client  {
 		// run the client:
 		// set up facade with the addy & port
 		try {
-			UIManager.setLookAndFeel(
-					"com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+	//		UIManager.setLookAndFeel(
+	//				"com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 		}
 		catch(Exception e){
 			// oops
