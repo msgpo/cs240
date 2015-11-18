@@ -164,11 +164,12 @@ public class facade{
 			bs.firstx = bs.fields.getFirst().getXCoord();
 
 			for(int rNum = 1; rNum <= bs.rows; rNum++){
-				for(field f : bs.fields){
+				for(int fNum = 1; fNum <= bs.fields.size(); fNum++){
 					record rec = new record(bs.batchID,
+								fNum,
 								rNum,
-								f.getNumber(),
 								"");
+					bs.records.add(rec);
 				}
 			}
 			
@@ -207,17 +208,21 @@ public class facade{
 		try{
 			StringBuilder submission = new StringBuilder();
 			for(int row = 1; row <= bs.rows; row++){
-				for(int col = 1; col < bs.fields.size(); col++){
+				for(int col = 1; col <= bs.fields.size(); col++){
 					for(record r : bs.records){
 						if(r.getNumber() == row && r.getFieldNumber() == col){
 							submission.append(r.getValue());
+							if(col != bs.fields.size()){
+								submission.append(",");
+							}
 						}
-						submission.append(",");
 					}
 				}
+
 				submission.append(";");
 			}
 			String sub = submission.substring(0, submission.length()-1);
+			//System.out.println(sub);
 			batchProposal bp = new batchProposal(bs.batchID, sub);
 			if(!comm.submitBatch(uToken, bp)){
 				throw new ClientException("can't submit");

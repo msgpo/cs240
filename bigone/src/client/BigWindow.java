@@ -67,12 +67,13 @@ public class BigWindow extends JFrame
 				imgPanel, dataPane);
 		indexingPane.setResizeWeight(0.6);
 		indexingPanel.add(indexingPane);
-		indexingPanel.setMinimumSize(new Dimension(1000,900));
-		indexingPanel.setPreferredSize(new Dimension(1000,1024));
-		indexingPanel.setMaximumSize(new Dimension(1464,1000));
+		indexingPanel.setMinimumSize(new Dimension(1000,256));
+		indexingPanel.setPreferredSize(new Dimension(1000,512));
+		indexingPanel.setMaximumSize(new Dimension(1464,964));
 		this.add(indexingPanel);
 		this.add(Box.createRigidArea(new Dimension(0,10)));
-		this.setMinimumSize(new Dimension(1024, 1100));
+		this.setMinimumSize(new Dimension(1024, 980));
+		this.setMaximumSize(new Dimension(1480, 1000));
 		this.pack();
 
 	}
@@ -119,6 +120,14 @@ public class BigWindow extends JFrame
 			System.exit(0);		
 		}
 		if(e.getActionCommand().equals("logout")){
+			Point origin = this.getLocationOnScreen();
+			bState.windowX = (int) origin.getX();
+			bState.windowY = (int) origin.getY();
+			bState.windowW = this.getWidth();
+			bState.windowH = this.getHeight();
+			bState.hsplit = indexingPane.getDividerLocation();
+			bState.vsplit = dataPane.getDividerLocation();
+			facade.save();
 			// clear everything
 			imgPanel.clear();
 			// this batchstate will never actually be seen
@@ -201,6 +210,7 @@ public class BigWindow extends JFrame
 		indexingPane.setDividerLocation(bs.hsplit);
 		dataPane.setDividerLocation(bs.vsplit);
 		// image setup
+		imgPanel.clear();
 		imgPanel.setImage(bs.getImg());
 		imgPanel.setZoom(bs.zoom);
 		imgPanel.setPos(bState.offsetX, bState.offsetY);

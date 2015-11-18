@@ -43,8 +43,10 @@ public class IndexingTable extends JPanel {
 		JPanel rootPanel = new JPanel(new BorderLayout());
 		rootPanel.add(table.getTableHeader(), BorderLayout.NORTH);
 		rootPanel.add(table, BorderLayout.CENTER);
+		rootPanel.setMinimumSize(new Dimension(512, 256));
 
 		this.add(rootPanel);
+		this.setMinimumSize(new Dimension(512, 256));
 	}
 	
 	private MouseAdapter mouseAdapter = new MouseAdapter() {

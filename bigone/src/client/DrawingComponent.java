@@ -196,6 +196,7 @@ public class DrawingComponent extends JComponent {
 			int d_Y = e.getY();
 
 			AffineTransform transform = new AffineTransform();
+			transform.translate(getWidth()/2.0, getHeight()/2.0);
 			transform.scale(scale, scale);
 			transform.translate(-w_originX, -w_originY);
 			
@@ -236,6 +237,7 @@ public class DrawingComponent extends JComponent {
 				int d_Y = e.getY();
 				
 				AffineTransform transform = new AffineTransform();
+				transform.translate(getWidth()/2.0, getHeight()/2.0);
 				transform.scale(scale, scale);
 				transform.translate(-w_dragStartOriginX, -w_dragStartOriginY);
 				

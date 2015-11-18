@@ -63,13 +63,13 @@ public class IndexingTableModel extends AbstractTableModel {
 
 		if(column == 0){
 			// return record number: i.e. row
-			result = row;
+			result = row + 1;
 		}
 		else if(row >= 0 && row < getRowCount() && 
 				column > 0 && 
 				column < getColumnCount()){
 			for(record r : bs.records){
-				if(r.getNumber() == row &&
+				if(r.getNumber() == row + 1 &&
 						r.getFieldNumber() == column){
 					// remember FNumber starts at one,
 					// so counting from the 1st column
@@ -95,7 +95,7 @@ public class IndexingTableModel extends AbstractTableModel {
 		else if(row >= 0 && row < getRowCount() && column > 0
 				&& column < getColumnCount()){
 			for(record r : bs.records){
-				if(r.getNumber() == row &&
+				if(r.getNumber() == row + 1 &&
 						r.getFieldNumber() == column){
 					// remember FNumber starts at one,
 					// so counting from the 1st column
